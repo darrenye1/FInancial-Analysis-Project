@@ -14,7 +14,7 @@ import {
   YAxis,
 } from "recharts";
 import { Card } from "./ui";
-import { formatBillions } from "@/lib/data";
+import { formatBillions } from "@/lib/format";
 
 const COLORS = ["#CC0000", "#e94560", "#3498db", "#2ecc71"];
 
@@ -90,9 +90,10 @@ export function ForecastChart({ data }: { data: Record<string, number | string |
             dataKey="Total Revenue"
             stroke="#CC0000"
             strokeWidth={2.5}
-            dot={(props) => {
+            dot={(props: { cx?: number; cy?: number; payload?: { Type?: string } }) => {
               const { cx, cy, payload } = props;
-              const color = payload.Type === "Forecast" ? "#3498db" : "#CC0000";
+              if (cx == null || cy == null) return <></>;
+              const color = payload?.Type === "Forecast" ? "#3498db" : "#CC0000";
               return <circle cx={cx} cy={cy} r={5} fill={color} />;
             }}
           />
@@ -176,7 +177,7 @@ export function TornadoChart({
           <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
           <XAxis type="number" tickFormatter={(v) => `$${(v / 1e9).toFixed(1)}B`} stroke="#8892a4" />
           <YAxis type="category" dataKey="driver" width={80} stroke="#8892a4" tick={{ fontSize: 11 }} />
-          <Tooltip formatter={(v: number) => formatBillions(Math.abs(v))} />
+          <Tooltip formatter={(v) => formatBillions(Math.abs(Number(v)))} />
           <Bar dataKey="low" stackId="a" fill="#e74c3c" />
           <Bar dataKey="high" stackId="a" fill="#2ecc71" />
         </BarChart>

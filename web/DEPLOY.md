@@ -48,7 +48,22 @@ Open [http://localhost:3000](http://localhost:3000)
 | Output Directory | `out` |
 | Install Command | `npm install` |
 
-## LinkedIn
+## Troubleshooting
+
+### Build fails: `Module not found: Can't resolve '@/lib/data'`
+
+The `web/lib/` folder must be committed. In GitHub Desktop, confirm these files are checked:
+
+- `web/lib/data.ts`
+- `web/lib/types.ts`
+- `web/lib/format.ts`
+
+Then Commit → Push origin.
+
+### Charts not showing on the live site
+
+Run `python scripts/export_for_web.py` locally, then commit and push `web/public/charts/`.
+
 
 After deploy, share your live URL:
 
