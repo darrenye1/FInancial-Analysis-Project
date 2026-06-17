@@ -18,12 +18,12 @@ from src.capital_structure import CapitalStructureAnalyzer
 from src.cash_flow_analysis import CashFlowAnalyzer
 from src.data_fetcher import FinancialDataFetcher
 from src.dupont_analysis import DuPontAnalyzer
+from src.executive_summary import ExecutiveSummaryGenerator
 from src.forecasting import FinancialForecaster
 from src.margin_bridge import MarginBridgeAnalyzer
 from src.pl_analysis import PLAnalyzer
 from src.sensitivity import SensitivityAnalyzer
 from src.working_capital import WorkingCapitalAnalyzer
-from src import visualization as viz
 
 
 def _df_to_records(df: pd.DataFrame) -> list[dict]:
@@ -54,9 +54,7 @@ def _series_to_chart(df: pd.DataFrame, columns: list[str]) -> list[dict]:
 
 def export(ticker: str = "TSLA") -> Path:
     web_public = ROOT / "web" / "public"
-    charts_dir = web_public / "charts"
     data_dir = web_public / "data"
-    charts_dir.mkdir(parents=True, exist_ok=True)
     data_dir.mkdir(parents=True, exist_ok=True)
 
     fetcher = FinancialDataFetcher(ticker)
@@ -102,21 +100,23 @@ def export(ticker: str = "TSLA") -> Path:
     cap_struct = CapitalStructureAnalyzer(income_stmt, balance_sheet).summary()
     bridge = MarginBridgeAnalyzer(income_stmt).yoy_bridge()
 
-    # Generate charts into web/public/charts
-    viz.plot_revenue_profit_trend(income_stmt, charts_dir / "01_revenue_profit_trend.png")
-    viz.plot_margin_trends(margins, charts_dir / "02_margin_trends.png")
-    viz.plot_yoy_growth(growth, charts_dir / "03_yoy_growth.png")
-    viz.plot_stock_price(price_history, charts_dir / "04_stock_price.png")
-    viz.plot_budget_vs_actual(budget_summary, charts_dir / "05_budget_vs_actual.png")
-    viz.plot_forecast(revenue_fc, "Total Revenue", charts_dir / "06_revenue_forecast.png")
-    viz.plot_scenario_forecast(scenarios, "Total Revenue", charts_dir / "07_scenario_forecast.png")
-    viz.plot_tornado(tornado, charts_dir / "08_tornado_chart.png")
-    viz.plot_sensitivity_heatmap(two_way, charts_dir / "09_sensitivity_heatmap.png")
-    viz.plot_fcf_trend(fcf_summary, charts_dir / "10_fcf_trend.png")
-    viz.plot_dupont(dupont, charts_dir / "11_dupont_returns.png")
-    viz.plot_working_capital(wc_summary, charts_dir / "12_working_capital.png")
-    viz.plot_margin_bridge(bridge, charts_dir / "13_margin_bridge.png")
-    viz.plot_leverage(cap_struct, charts_dir / "14_capital_structure.png")
+    summary_gen = ExecutiveSummaryGenerator(
+        ticker=ticker,
+        company_name=info["name"],
+        income_stmt=income_stmt,
+        margins=margins,
+        growth=growth,
+        fcf_summary=fcf_summary,
+        wc_summary=wc_summary,
+        dupont=dupont,
+        cap_struct=cap_struct,
+        variance=variance,
+        bridge=bridge,
+        tornado=tornado,
+        revenue_fc=revenue_fc,
+        scenarios=scenarios,
+    )
+    executive_summary = summary_gen.generate()
 
     latest = int(latest_year)
     rev = float(income_stmt.loc[latest_year, "Total Revenue"])
@@ -185,6 +185,7 @@ def export(ticker: str = "TSLA") -> Path:
             "capitalStructure": _df_to_records(cap_struct),
             "marginBridge": bridge.to_dict(orient="records"),
         },
+        "summary": executive_summary,
         "stockPrice": [
             {
                 "date": d.strftime("%Y-%m-%d"),
@@ -205,7 +206,6 @@ def export(ticker: str = "TSLA") -> Path:
     shutil.copy(out_path, web_data)
 
     print("Exported:", out_path.name)
-    print("Charts saved to public/charts/")
     return out_path
 
 

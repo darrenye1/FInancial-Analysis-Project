@@ -46,6 +46,10 @@ export interface AnalysisData {
     capitalStructure: Record<string, number | string | null>[];
     marginBridge: Record<string, number | string | null>[];
   };
+  summary: {
+    sections: { title: string; body: string }[];
+    fullText: string;
+  };
   stockPrice: { date: string; close: number; volume: number }[];
   generatedAt: string;
 }

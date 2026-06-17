@@ -8,14 +8,15 @@ import {
   MarginChart,
   RevenueProfitChart,
   ScenarioChart,
+  BudgetVsActualChart,
   TornadoChart,
 } from "@/components/charts";
 import { Footer, Header, Hero, ProfileBanner } from "@/components/layout";
-import { Badge, Card, ChartImage, KPICard, Section } from "@/components/ui";
+import { Badge, Card, KPICard, Section } from "@/components/ui";
 import { analysisData, formatBillions, formatPercent } from "@/lib/data";
 
 export default function Home() {
-  const { company, highlights, pl, budget, forecast, sensitivity, corpFin, generatedAt, ticker } =
+  const { company, highlights, pl, budget, forecast, sensitivity, corpFin, summary, generatedAt, ticker } =
     analysisData;
 
   return (
@@ -62,10 +63,6 @@ export default function Home() {
               <GrowthChart data={pl.growth} />
               <MarginBridgeChart data={corpFin.marginBridge} />
             </div>
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              <ChartImage src="/charts/01_revenue_profit_trend.png" alt="Revenue and profit trend" />
-              <ChartImage src="/charts/02_margin_trends.png" alt="Margin trends" />
-            </div>
           </Section>
 
           {/* Cash Flow */}
@@ -76,9 +73,6 @@ export default function Home() {
           >
             <div className="grid gap-6 lg:grid-cols-2">
               <FCFChart data={corpFin.cashFlow} />
-              <ChartImage src="/charts/10_fcf_trend.png" alt="FCF trend" />
-            </div>
-            <div className="mt-6">
               <Card>
                 <h3 className="mb-4 text-lg font-semibold text-white">Cash Flow Metrics</h3>
                 <div className="overflow-x-auto">
@@ -119,10 +113,6 @@ export default function Home() {
               <DuPontChart data={corpFin.dupont} />
               <CCCChart data={corpFin.workingCapital} />
             </div>
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              <ChartImage src="/charts/11_dupont_returns.png" alt="DuPont returns" />
-              <ChartImage src="/charts/12_working_capital.png" alt="Working capital" />
-            </div>
             <div className="mt-6">
               <Card>
                 <h3 className="mb-4 text-lg font-semibold text-white">Capital Structure</h3>
@@ -161,7 +151,7 @@ export default function Home() {
             subtitle="Forward-looking budget built from historical CAGR assumptions, compared against actual performance."
           >
             <div className="grid gap-6 lg:grid-cols-2">
-              <ChartImage src="/charts/05_budget_vs_actual.png" alt="Budget vs actual" />
+              <BudgetVsActualChart data={budget.summary} />
               <Card>
                 <h3 className="mb-4 text-lg font-semibold text-white">
                   Budget vs Actual — {highlights.latestYear}
@@ -220,10 +210,6 @@ export default function Home() {
               <ForecastChart data={forecast.revenue} />
               <ScenarioChart data={forecast.scenarios} />
             </div>
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              <ChartImage src="/charts/06_revenue_forecast.png" alt="Revenue forecast" />
-              <ChartImage src="/charts/07_scenario_forecast.png" alt="Scenario forecast" />
-            </div>
           </Section>
 
           {/* Sensitivity */}
@@ -232,10 +218,7 @@ export default function Home() {
             title="Sensitivity Analysis"
             subtitle="Identify which financial drivers have the greatest impact on net income under ±10% changes."
           >
-            <div className="grid gap-6 lg:grid-cols-2">
-              <TornadoChart data={sensitivity.tornado} />
-              <ChartImage src="/charts/09_sensitivity_heatmap.png" alt="Sensitivity heatmap" />
-            </div>
+            <TornadoChart data={sensitivity.tornado} />
             <div className="mt-6">
               <Card>
                 <h3 className="mb-4 text-lg font-semibold text-white">Driver Impact Ranking</h3>
@@ -261,6 +244,22 @@ export default function Home() {
                   ))}
                 </div>
               </Card>
+            </div>
+          </Section>
+
+          {/* Executive Summary Report */}
+          <Section
+            id="summary"
+            title="Executive Summary"
+            subtitle="Narrative FP&A report synthesizing key findings across P&L, cash flow, working capital, budgeting, forecasting, and sensitivity analysis."
+          >
+            <div className="space-y-6">
+              {summary.sections.map((section) => (
+                <Card key={section.title}>
+                  <h3 className="mb-3 text-base font-semibold text-brand-accent">{section.title}</h3>
+                  <p className="text-sm leading-relaxed text-brand-muted">{section.body}</p>
+                </Card>
+              ))}
             </div>
           </Section>
 

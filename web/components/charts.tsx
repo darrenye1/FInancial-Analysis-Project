@@ -305,3 +305,30 @@ export function MarginBridgeChart({ data }: { data: Record<string, number | stri
     </Card>
   );
 }
+
+export function BudgetVsActualChart({ data }: { data: Record<string, number | string | null>[] }) {
+  const chartData = data.filter((d) => d["Total Revenue"] != null);
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Revenue: Actual vs Budget</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="year" stroke="#8892a4" />
+          <YAxis tickFormatter={(v) => `$${(v / 1e9).toFixed(0)}B`} stroke="#8892a4" />
+          <Tooltip content={<ChartTooltip />} />
+          <Legend />
+          <Bar dataKey="Total Revenue" name="Revenue" radius={[4, 4, 0, 0]}>
+            {chartData.map((entry, i) => (
+              <Cell
+                key={i}
+                fill={entry.Type === "Budget" ? "#3498db" : "#CC0000"}
+                opacity={entry.Type === "Budget" ? 0.7 : 1}
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}

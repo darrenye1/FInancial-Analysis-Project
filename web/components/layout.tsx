@@ -1,4 +1,4 @@
-import { BarChart3, Calculator, Coins, Github, LineChart, Linkedin, Mail, PieChart, TrendingUp, Zap } from "lucide-react";
+import { BarChart3, Calculator, Coins, FileText, Github, LineChart, Linkedin, Mail, PieChart, TrendingUp, Zap } from "lucide-react";
 import { author } from "@/lib/author";
 import { Badge } from "./ui";
 
@@ -10,6 +10,7 @@ const links = [
   { href: "#budget", label: "Budget", icon: Calculator },
   { href: "#forecast", label: "Forecast", icon: LineChart },
   { href: "#sensitivity", label: "Sensitivity", icon: Zap },
+  { href: "#summary", label: "Summary", icon: FileText },
 ];
 
 export function ProfileBanner() {
