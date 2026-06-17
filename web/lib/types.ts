@@ -15,6 +15,9 @@ export interface AnalysisData {
     netMargin: number | null;
     grossMargin: number | null;
     revenueYoY: number | null;
+    freeCashFlow: number | null;
+    roe: number | null;
+    cashConversionCycle: number | null;
   };
   pl: {
     incomeStatement: Record<string, number | string | null>[];
@@ -35,6 +38,13 @@ export interface AnalysisData {
     oneWay: Record<string, number | null>[];
     twoWay: { columns: string[]; rows: Record<string, number | string | null>[] };
     tornado: { Driver: string; "Low Case": number; "High Case": number; Base: number; Range: number }[];
+  };
+  corpFin: {
+    cashFlow: Record<string, number | string | null>[];
+    workingCapital: Record<string, number | string | null>[];
+    dupont: Record<string, number | string | null>[];
+    capitalStructure: Record<string, number | string | null>[];
+    marginBridge: Record<string, number | string | null>[];
   };
   stockPrice: { date: string; close: number; volume: number }[];
   generatedAt: string;

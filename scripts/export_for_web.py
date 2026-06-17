@@ -14,10 +14,15 @@ ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
 from src.budgeting import BudgetAnalyzer
+from src.capital_structure import CapitalStructureAnalyzer
+from src.cash_flow_analysis import CashFlowAnalyzer
 from src.data_fetcher import FinancialDataFetcher
+from src.dupont_analysis import DuPontAnalyzer
 from src.forecasting import FinancialForecaster
+from src.margin_bridge import MarginBridgeAnalyzer
 from src.pl_analysis import PLAnalyzer
 from src.sensitivity import SensitivityAnalyzer
+from src.working_capital import WorkingCapitalAnalyzer
 from src import visualization as viz
 
 
@@ -57,6 +62,8 @@ def export(ticker: str = "TSLA") -> Path:
     fetcher = FinancialDataFetcher(ticker)
     info = fetcher.get_company_info()
     income_stmt = fetcher.get_income_statement()
+    balance_sheet = fetcher.get_balance_sheet()
+    cash_flow = fetcher.get_cash_flow()
     price_history = fetcher.get_price_history()
 
     pl = PLAnalyzer(income_stmt)
@@ -87,6 +94,14 @@ def export(ticker: str = "TSLA") -> Path:
     two_way = sensitivity.two_way_sensitivity()
     tornado = sensitivity.tornado_data()
 
+    cf_analyzer = CashFlowAnalyzer(income_stmt, cash_flow, balance_sheet)
+    fcf_summary = cf_analyzer.fcf_summary()
+    wc_analyzer = WorkingCapitalAnalyzer(income_stmt, balance_sheet)
+    wc_summary = wc_analyzer.summary()
+    dupont = DuPontAnalyzer(income_stmt, balance_sheet).decompose()
+    cap_struct = CapitalStructureAnalyzer(income_stmt, balance_sheet).summary()
+    bridge = MarginBridgeAnalyzer(income_stmt).yoy_bridge()
+
     # Generate charts into web/public/charts
     viz.plot_revenue_profit_trend(income_stmt, charts_dir / "01_revenue_profit_trend.png")
     viz.plot_margin_trends(margins, charts_dir / "02_margin_trends.png")
@@ -97,10 +112,19 @@ def export(ticker: str = "TSLA") -> Path:
     viz.plot_scenario_forecast(scenarios, "Total Revenue", charts_dir / "07_scenario_forecast.png")
     viz.plot_tornado(tornado, charts_dir / "08_tornado_chart.png")
     viz.plot_sensitivity_heatmap(two_way, charts_dir / "09_sensitivity_heatmap.png")
+    viz.plot_fcf_trend(fcf_summary, charts_dir / "10_fcf_trend.png")
+    viz.plot_dupont(dupont, charts_dir / "11_dupont_returns.png")
+    viz.plot_working_capital(wc_summary, charts_dir / "12_working_capital.png")
+    viz.plot_margin_bridge(bridge, charts_dir / "13_margin_bridge.png")
+    viz.plot_leverage(cap_struct, charts_dir / "14_capital_structure.png")
 
     latest = int(latest_year)
     rev = float(income_stmt.loc[latest_year, "Total Revenue"])
     ni = float(income_stmt.loc[latest_year, "Net Income"])
+
+    latest_fcf = float(fcf_summary.loc[latest_year, "Free Cash Flow"]) if latest_year in fcf_summary.index else None
+    latest_roe = float(dupont.loc[latest_year, "ROE %"]) if latest_year in dupont.index else None
+    latest_ccc = float(wc_summary.loc[latest_year, "Cash Conversion Cycle"]) if latest_year in wc_summary.index and not pd.isna(wc_summary.loc[latest_year, "Cash Conversion Cycle"]) else None
 
     payload = {
         "ticker": ticker,
@@ -121,6 +145,9 @@ def export(ticker: str = "TSLA") -> Path:
             "revenueYoY": round(float(growth.loc[latest_year, "Total Revenue YoY %"]), 2)
             if "Total Revenue YoY %" in growth.columns and latest in growth.index and not pd.isna(growth.loc[latest_year, "Total Revenue YoY %"])
             else None,
+            "freeCashFlow": round(latest_fcf, 0) if latest_fcf is not None else None,
+            "roe": latest_roe,
+            "cashConversionCycle": latest_ccc,
         },
         "pl": {
             "incomeStatement": _series_to_chart(
@@ -150,6 +177,13 @@ def export(ticker: str = "TSLA") -> Path:
                 ],
             },
             "tornado": tornado.to_dict(orient="records"),
+        },
+        "corpFin": {
+            "cashFlow": _df_to_records(fcf_summary),
+            "workingCapital": _df_to_records(wc_summary),
+            "dupont": _df_to_records(dupont),
+            "capitalStructure": _df_to_records(cap_struct),
+            "marginBridge": bridge.to_dict(orient="records"),
         },
         "stockPrice": [
             {

@@ -8,10 +8,10 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: "Tesla Financial Analysis | Darren Ye",
   description:
-    "Comprehensive financial analysis of Tesla (TSLA) — P&L, budgeting, forecasting, and sensitivity analysis with real Yahoo Finance data.",
+    "Corporate Finance FP&A dashboard for Tesla (TSLA) — P&L, cash flow, working capital, DuPont analysis, budgeting, forecasting, and sensitivity.",
   openGraph: {
     title: "Tesla Financial Analysis Dashboard",
-    description: "P&L · Budgeting · Forecasting · Sensitivity Analysis by Darren Ye",
+    description: "Corp Fin FP&A — Cash Flow · DuPont · Working Capital · Budgeting · Forecasting",
     type: "website",
     url: siteUrl,
     siteName: "Darren Ye — Financial Analytics",

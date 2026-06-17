@@ -1,10 +1,13 @@
 import {
+  CCCChart,
+  DuPontChart,
+  FCFChart,
   ForecastChart,
   GrowthChart,
+  MarginBridgeChart,
   MarginChart,
   RevenueProfitChart,
   ScenarioChart,
-  StockPriceChart,
   TornadoChart,
 } from "@/components/charts";
 import { Footer, Header, Hero, ProfileBanner } from "@/components/layout";
@@ -12,7 +15,7 @@ import { Badge, Card, ChartImage, KPICard, Section } from "@/components/ui";
 import { analysisData, formatBillions, formatPercent } from "@/lib/data";
 
 export default function Home() {
-  const { company, highlights, pl, budget, forecast, sensitivity, stockPrice, generatedAt, ticker } =
+  const { company, highlights, pl, budget, forecast, sensitivity, corpFin, generatedAt, ticker } =
     analysisData;
 
   return (
@@ -32,16 +35,16 @@ export default function Home() {
               positive={highlights.revenueYoY != null ? highlights.revenueYoY >= 0 : undefined}
             />
             <KPICard
-              label={`Net Income (${highlights.latestYear})`}
-              value={formatBillions(highlights.netIncome)}
+              label={`Free Cash Flow (${highlights.latestYear})`}
+              value={highlights.freeCashFlow != null ? formatBillions(highlights.freeCashFlow) : "N/A"}
             />
             <KPICard
-              label="Net Margin"
-              value={highlights.netMargin != null ? `${highlights.netMargin}%` : "N/A"}
+              label="ROE"
+              value={highlights.roe != null ? `${highlights.roe}%` : "N/A"}
             />
             <KPICard
-              label="Gross Margin"
-              value={highlights.grossMargin != null ? `${highlights.grossMargin}%` : "N/A"}
+              label="Cash Conversion Cycle"
+              value={highlights.cashConversionCycle != null ? `${highlights.cashConversionCycle} days` : "N/A"}
             />
           </div>
         </div>
@@ -57,11 +60,97 @@ export default function Home() {
               <RevenueProfitChart data={pl.incomeStatement} />
               <MarginChart data={pl.margins} />
               <GrowthChart data={pl.growth} />
-              <StockPriceChart data={stockPrice} />
+              <MarginBridgeChart data={corpFin.marginBridge} />
             </div>
             <div className="mt-6 grid gap-6 md:grid-cols-2">
               <ChartImage src="/charts/01_revenue_profit_trend.png" alt="Revenue and profit trend" />
               <ChartImage src="/charts/02_margin_trends.png" alt="Margin trends" />
+            </div>
+          </Section>
+
+          {/* Cash Flow */}
+          <Section
+            id="cashflow"
+            title="Cash Flow Analysis"
+            subtitle="Operating cash flow, free cash flow, and cash conversion quality — core FP&A metrics for liquidity planning."
+          >
+            <div className="grid gap-6 lg:grid-cols-2">
+              <FCFChart data={corpFin.cashFlow} />
+              <ChartImage src="/charts/10_fcf_trend.png" alt="FCF trend" />
+            </div>
+            <div className="mt-6">
+              <Card>
+                <h3 className="mb-4 text-lg font-semibold text-white">Cash Flow Metrics</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-brand-border text-left text-brand-muted">
+                        <th className="pb-3 pr-4">Year</th>
+                        <th className="pb-3 pr-4">OCF</th>
+                        <th className="pb-3 pr-4">FCF</th>
+                        <th className="pb-3 pr-4">FCF Margin</th>
+                        <th className="pb-3">OCF / NI</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {corpFin.cashFlow.map((row) => (
+                        <tr key={String(row.year)} className="border-b border-brand-border/40">
+                          <td className="py-3 pr-4 text-white">{row.year}</td>
+                          <td className="py-3 pr-4 text-brand-muted">{formatBillions(row["Operating Cash Flow"] as number)}</td>
+                          <td className="py-3 pr-4 text-brand-muted">{formatBillions(row["Free Cash Flow"] as number)}</td>
+                          <td className="py-3 pr-4 text-brand-muted">{row["FCF Margin %"]}%</td>
+                          <td className="py-3 text-brand-muted">{row["OCF / Net Income"]}x</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
+            </div>
+          </Section>
+
+          {/* Corporate Finance */}
+          <Section
+            id="corpfin"
+            title="Corporate Finance & Working Capital"
+            subtitle="DuPont ROE decomposition, working capital efficiency, and capital structure — standard corp fin FP&A toolkit."
+          >
+            <div className="grid gap-6 lg:grid-cols-2">
+              <DuPontChart data={corpFin.dupont} />
+              <CCCChart data={corpFin.workingCapital} />
+            </div>
+            <div className="mt-6 grid gap-6 md:grid-cols-2">
+              <ChartImage src="/charts/11_dupont_returns.png" alt="DuPont returns" />
+              <ChartImage src="/charts/12_working_capital.png" alt="Working capital" />
+            </div>
+            <div className="mt-6">
+              <Card>
+                <h3 className="mb-4 text-lg font-semibold text-white">Capital Structure</h3>
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm">
+                    <thead>
+                      <tr className="border-b border-brand-border text-left text-brand-muted">
+                        <th className="pb-3 pr-4">Year</th>
+                        <th className="pb-3 pr-4">Net Debt</th>
+                        <th className="pb-3 pr-4">Debt / Equity</th>
+                        <th className="pb-3 pr-4">Net Debt / EBITDA</th>
+                        <th className="pb-3">Interest Coverage</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {corpFin.capitalStructure.map((row) => (
+                        <tr key={String(row.year)} className="border-b border-brand-border/40">
+                          <td className="py-3 pr-4 text-white">{row.year}</td>
+                          <td className="py-3 pr-4 text-brand-muted">{formatBillions(row["Net Debt"] as number)}</td>
+                          <td className="py-3 pr-4 text-brand-muted">{row["Debt / Equity"]}x</td>
+                          <td className="py-3 pr-4 text-brand-muted">{row["Net Debt / EBITDA"]}x</td>
+                          <td className="py-3 text-brand-muted">{row["Interest Coverage"]}x</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </Card>
             </div>
           </Section>
 
@@ -183,10 +272,10 @@ export default function Home() {
           >
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {[
-                { title: "Data Source", desc: "Yahoo Finance API via yfinance — income statement, balance sheet, cash flow, and 5Y stock prices." },
-                { title: "P&L Analysis", desc: "Margin trends, YoY growth rates, and expense breakdown as % of revenue." },
-                { title: "Budgeting", desc: "CAGR-based forward budget with formal variance analysis (budget vs actual)." },
-                { title: "Forecasting", desc: "Exponential smoothing for base forecast; bull/base/bear scenarios at ±25% / 10% / -5%." },
+                { title: "Data Source", desc: "Yahoo Finance — income statement, balance sheet, and cash flow for integrated FP&A modeling." },
+                { title: "P&L & Margin Bridge", desc: "Revenue, margin, and OpEx decomposition of year-over-year net income changes." },
+                { title: "Cash Flow & FCF", desc: "Operating cash flow, free cash flow, FCF margin, and earnings quality (OCF/NI)." },
+                { title: "Corp Fin Metrics", desc: "DuPont ROE, cash conversion cycle, net debt/EBITDA, and interest coverage." },
               ].map((item) => (
                 <Card key={item.title}>
                   <h4 className="font-semibold text-white">{item.title}</h4>

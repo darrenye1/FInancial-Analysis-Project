@@ -218,3 +218,90 @@ export function GrowthChart({ data }: { data: Record<string, number | string | n
     </Card>
   );
 }
+
+export function FCFChart({ data }: { data: Record<string, number | string | null>[] }) {
+  const keys = ["Operating Cash Flow", "Free Cash Flow"];
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Operating & Free Cash Flow</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="year" stroke="#8892a4" />
+          <YAxis tickFormatter={(v) => `$${(v / 1e9).toFixed(0)}B`} stroke="#8892a4" />
+          <Tooltip content={<ChartTooltip />} />
+          <Legend />
+          {keys.map((key, i) => (
+            <Line key={key} type="monotone" dataKey={key} stroke={COLORS[i]} strokeWidth={2.5} dot={{ r: 4 }} />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function DuPontChart({ data }: { data: Record<string, number | string | null>[] }) {
+  const keys = ["ROE %", "ROA %", "ROIC %"];
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Return Metrics (DuPont)</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="year" stroke="#8892a4" />
+          <YAxis stroke="#8892a4" unit="%" />
+          <Tooltip />
+          <Legend />
+          {keys.map((key, i) => (
+            <Line key={key} type="monotone" dataKey={key} stroke={COLORS[i]} strokeWidth={2.5} dot={{ r: 4 }} />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function CCCChart({ data }: { data: Record<string, number | string | null>[] }) {
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Cash Conversion Cycle (days)</h3>
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="year" stroke="#8892a4" />
+          <YAxis stroke="#8892a4" />
+          <Tooltip />
+          <Bar dataKey="Cash Conversion Cycle" fill="#3498db" radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function MarginBridgeChart({ data }: { data: Record<string, number | string | null>[] }) {
+  if (!data.length) return null;
+  const latest = data[data.length - 1];
+  const keys = ["Revenue Volume", "Margin / Mix", "OpEx Change", "Below-the-Line"];
+  const chartData = keys.map((k) => ({ name: k.replace(" / Mix", ""), value: latest[k] as number }));
+
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">
+        Net Income Bridge — {String(latest.period)}
+      </h3>
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="name" stroke="#8892a4" tick={{ fontSize: 10 }} />
+          <YAxis tickFormatter={(v) => `$${(v / 1e9).toFixed(1)}B`} stroke="#8892a4" />
+          <Tooltip formatter={(v) => formatBillions(Number(v))} />
+          <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+            {chartData.map((entry, i) => (
+              <Cell key={i} fill={entry.value >= 0 ? "#2ecc71" : "#e74c3c"} />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}

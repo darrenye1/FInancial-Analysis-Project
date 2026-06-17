@@ -1,10 +1,12 @@
-import { BarChart3, Calculator, Github, LineChart, Linkedin, Mail, TrendingUp, Zap } from "lucide-react";
+import { BarChart3, Calculator, Coins, Github, LineChart, Linkedin, Mail, PieChart, TrendingUp, Zap } from "lucide-react";
 import { author } from "@/lib/author";
 import { Badge } from "./ui";
 
 const links = [
   { href: "#overview", label: "Overview", icon: TrendingUp },
   { href: "#pl", label: "P&L", icon: BarChart3 },
+  { href: "#cashflow", label: "Cash Flow", icon: Coins },
+  { href: "#corpfin", label: "Corp Fin", icon: PieChart },
   { href: "#budget", label: "Budget", icon: Calculator },
   { href: "#forecast", label: "Forecast", icon: LineChart },
   { href: "#sensitivity", label: "Sensitivity", icon: Zap },
@@ -118,8 +120,8 @@ export function Hero({
         <p className="mb-3 text-sm font-medium uppercase tracking-widest text-red-400">Case Study</p>
         <h2 className="font-display text-4xl font-bold tracking-tight text-white md:text-5xl">{name}</h2>
         <p className="mt-4 max-w-2xl text-brand-muted">
-          End-to-end financial modeling with real Yahoo Finance data — P&amp;L analysis, budgeting,
-          forecasting, and sensitivity analysis.
+          Corporate finance FP&amp;A case study — P&amp;L analysis, cash flow modeling, working capital,
+          DuPont returns, budgeting, forecasting, and sensitivity analysis.
         </p>
         <div className="mt-5 flex flex-wrap gap-3">
           <span className="rounded-full bg-white/5 px-4 py-1.5 text-sm text-brand-muted ring-1 ring-white/10">

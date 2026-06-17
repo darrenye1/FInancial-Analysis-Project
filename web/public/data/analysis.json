@@ -14,7 +14,10 @@
     "netIncome": 3794000000.0,
     "netMargin": 4.0,
     "grossMargin": 18.03,
-    "revenueYoY": -2.93
+    "revenueYoY": -2.93,
+    "freeCashFlow": 6220000000.0,
+    "roe": 4.62,
+    "cashConversionCycle": 13.0
   },
   "pl": {
     "incomeStatement": [
@@ -634,6 +637,239 @@
         "High Case": 2835915240.2557216,
         "Base": 3794000000.0,
         "Range": 1916169519.4885554
+      }
+    ]
+  },
+  "corpFin": {
+    "cashFlow": [
+      {
+        "year": 2021,
+        "Operating Cash Flow": 0.0,
+        "Capital Expenditure": 0.0,
+        "Free Cash Flow": 0.0,
+        "FCF Margin %": null,
+        "CapEx % of Revenue": null,
+        "OCF / Net Income": null
+      },
+      {
+        "year": 2022,
+        "Operating Cash Flow": 14724000000.0,
+        "Capital Expenditure": 7172000000.0,
+        "Free Cash Flow": 7552000000.0,
+        "FCF Margin %": 9.27,
+        "CapEx % of Revenue": 8.8,
+        "OCF / Net Income": 1.17
+      },
+      {
+        "year": 2023,
+        "Operating Cash Flow": 13256000000.0,
+        "Capital Expenditure": 8899000000.0,
+        "Free Cash Flow": 4357000000.0,
+        "FCF Margin %": 4.5,
+        "CapEx % of Revenue": 9.2,
+        "OCF / Net Income": 0.88
+      },
+      {
+        "year": 2024,
+        "Operating Cash Flow": 14923000000.0,
+        "Capital Expenditure": 11342000000.0,
+        "Free Cash Flow": 3581000000.0,
+        "FCF Margin %": 3.67,
+        "CapEx % of Revenue": 11.61,
+        "OCF / Net Income": 2.09
+      },
+      {
+        "year": 2025,
+        "Operating Cash Flow": 14747000000.0,
+        "Capital Expenditure": 8527000000.0,
+        "Free Cash Flow": 6220000000.0,
+        "FCF Margin %": 6.56,
+        "CapEx % of Revenue": 8.99,
+        "OCF / Net Income": 3.89
+      }
+    ],
+    "workingCapital": [
+      {
+        "year": 2021,
+        "Working Capital": 0.0,
+        "WC % of Revenue": null,
+        "Δ Working Capital": null,
+        "DSO (days)": null,
+        "DIO (days)": null,
+        "DPO (days)": null,
+        "Cash Conversion Cycle": null
+      },
+      {
+        "year": 2022,
+        "Working Capital": 14208000000.0,
+        "WC % of Revenue": 17.44,
+        "Δ Working Capital": 14208000000.0,
+        "DSO (days)": 13.2,
+        "DIO (days)": 77.3,
+        "DPO (days)": 91.9,
+        "Cash Conversion Cycle": -1.4
+      },
+      {
+        "year": 2023,
+        "Working Capital": 20868000000.0,
+        "WC % of Revenue": 21.56,
+        "Δ Working Capital": 6660000000.0,
+        "DSO (days)": 13.2,
+        "DIO (days)": 62.9,
+        "DPO (days)": 66.6,
+        "Cash Conversion Cycle": 9.5
+      },
+      {
+        "year": 2024,
+        "Working Capital": 29539000000.0,
+        "WC % of Revenue": 30.24,
+        "Δ Working Capital": 8671000000.0,
+        "DSO (days)": 16.5,
+        "DIO (days)": 54.7,
+        "DPO (days)": 56.7,
+        "Cash Conversion Cycle": 14.5
+      },
+      {
+        "year": 2025,
+        "Working Capital": 36928000000.0,
+        "WC % of Revenue": 38.94,
+        "Δ Working Capital": 7389000000.0,
+        "DSO (days)": 17.6,
+        "DIO (days)": 58.2,
+        "DPO (days)": 62.8,
+        "Cash Conversion Cycle": 13.0
+      }
+    ],
+    "dupont": [
+      {
+        "year": 2021,
+        "ROE %": 0.0,
+        "ROA %": 0.0,
+        "ROIC %": 0.0,
+        "Net Margin %": 0.0,
+        "Asset Turnover": 0.0,
+        "Equity Multiplier": 0.0
+      },
+      {
+        "year": 2022,
+        "ROE %": 28.15,
+        "ROA %": 15.28,
+        "ROIC %": 29.59,
+        "Net Margin %": 15.45,
+        "Asset Turnover": 0.99,
+        "Equity Multiplier": 1.84
+      },
+      {
+        "year": 2023,
+        "ROE %": 23.95,
+        "ROA %": 14.07,
+        "ROIC %": 13.21,
+        "Net Margin %": 15.5,
+        "Asset Turnover": 0.91,
+        "Equity Multiplier": 1.7
+      },
+      {
+        "year": 2024,
+        "ROE %": 9.78,
+        "ROA %": 5.84,
+        "ROIC %": 9.61,
+        "Net Margin %": 7.3,
+        "Asset Turnover": 0.8,
+        "Equity Multiplier": 1.67
+      },
+      {
+        "year": 2025,
+        "ROE %": 4.62,
+        "ROA %": 2.75,
+        "ROIC %": 5.37,
+        "Net Margin %": 4.0,
+        "Asset Turnover": 0.69,
+        "Equity Multiplier": 1.68
+      }
+    ],
+    "capitalStructure": [
+      {
+        "year": 2021,
+        "Total Debt": 0.0,
+        "Net Debt": 0.0,
+        "Cash": 0.0,
+        "Debt / Equity": null,
+        "Net Debt / EBITDA": null,
+        "Interest Coverage": null
+      },
+      {
+        "year": 2022,
+        "Total Debt": 5748000000.0,
+        "Net Debt": -10505000000.0,
+        "Cash": 16253000000.0,
+        "Debt / Equity": 0.13,
+        "Net Debt / EBITDA": -0.59,
+        "Interest Coverage": 72.42
+      },
+      {
+        "year": 2023,
+        "Total Debt": 9573000000.0,
+        "Net Debt": -6825000000.0,
+        "Cash": 16398000000.0,
+        "Debt / Equity": 0.15,
+        "Net Debt / EBITDA": -0.46,
+        "Interest Coverage": 56.99
+      },
+      {
+        "year": 2024,
+        "Total Debt": 13623000000.0,
+        "Net Debt": -2516000000.0,
+        "Cash": 16139000000.0,
+        "Debt / Equity": 0.19,
+        "Net Debt / EBITDA": -0.17,
+        "Interest Coverage": 22.17
+      },
+      {
+        "year": 2025,
+        "Total Debt": 14719000000.0,
+        "Net Debt": -1794000000.0,
+        "Cash": 16513000000.0,
+        "Debt / Equity": 0.18,
+        "Net Debt / EBITDA": -0.15,
+        "Interest Coverage": 14.35
+      }
+    ],
+    "marginBridge": [
+      {
+        "period": "2021 → 2022",
+        "toYear": 2022,
+        "Revenue Volume": 0.0,
+        "Margin / Mix": 0.0,
+        "OpEx Change": -7021000000.0,
+        "Below-the-Line": -1249000000.0,
+        "Total Δ Net Income": 12583000000.0
+      },
+      {
+        "period": "2022 → 2023",
+        "toYear": 2023,
+        "Revenue Volume": 3919376924.0,
+        "Margin / Mix": -7112376924.0,
+        "OpEx Change": -1748000000.0,
+        "Below-the-Line": 7357000000.0,
+        "Total Δ Net Income": 2416000000.0
+      },
+      {
+        "period": "2023 → 2024",
+        "toYear": 2024,
+        "Revenue Volume": 167342337.0,
+        "Margin / Mix": -377342337.0,
+        "OpEx Change": -921000000.0,
+        "Below-the-Line": -6738000000.0,
+        "Total Δ Net Income": -7869000000.0
+      },
+      {
+        "period": "2024 → 2025",
+        "toYear": 2025,
+        "Revenue Volume": -511407002.0,
+        "Margin / Mix": 155407002.0,
+        "OpEx Change": -2555000000.0,
+        "Below-the-Line": -425000000.0,
+        "Total Δ Net Income": -3336000000.0
       }
     ]
   },
@@ -1899,5 +2135,5 @@
       "volume": 40144700
     }
   ],
-  "generatedAt": "2026-06-17T00:09:28.928390"
+  "generatedAt": "2026-06-17T00:52:20.361250"
 }

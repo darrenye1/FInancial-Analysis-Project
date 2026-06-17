@@ -220,3 +220,173 @@ def plot_budget_vs_actual(budget_summary: pd.DataFrame, output_path: Path) -> No
     ax.legend()
     ax.grid(axis="y", alpha=0.3)
     _save(fig, output_path)
+
+
+def plot_fcf_trend(fcf_df: pd.DataFrame, output_path: Path) -> None:
+    cols = ["Operating Cash Flow", "Capital Expenditure", "Free Cash Flow"]
+    available = [c for c in cols if c in fcf_df.columns]
+    fig, ax = plt.subplots(figsize=(10, 5))
+    x = fcf_df.index.astype(str)
+    width = 0.25
+    colors = [PALETTE["positive"], PALETTE["negative"], PALETTE["forecast"]]
+    for i, col in enumerate(available):
+        vals = fcf_df[col].abs() if col == "Capital Expenditure" else fcf_df[col]
+        offset = (i - len(available) / 2 + 0.5) * width
+        ax.bar([int(xi) + offset for xi in x], vals, width, label=col, color=colors[i % 3], alpha=0.85)
+    ax.set_title("Tesla (TSLA) — Cash Flow & Free Cash Flow")
+    ax.yaxis.set_major_formatter(mticker.FuncFormatter(_fmt_billions))
+    ax.legend()
+    ax.grid(axis="y", alpha=0.3)
+    _save(fig, output_path)
+
+
+def plot_dupont(dupont_df: pd.DataFrame, output_path: Path) -> None:
+    fig, ax = plt.subplots(figsize=(10, 5))
+    for col in ["ROE %", "ROA %", "ROIC %"]:
+        if col in dupont_df.columns:
+            ax.plot(dupont_df.index, dupont_df[col], marker="o", linewidth=2.5, label=col)
+    ax.set_title("Tesla (TSLA) — Return Metrics (DuPont Framework)")
+    ax.set_ylabel("Return (%)")
+    ax.legend()
+    ax.grid(alpha=0.3)
+    ax.axhline(0, color="gray", linewidth=0.8, linestyle="--")
+    _save(fig, output_path)
+
+
+def plot_working_capital(wc_df: pd.DataFrame, output_path: Path) -> None:
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    if "Cash Conversion Cycle" in wc_df.columns:
+        ax1.bar(wc_df.index.astype(str), wc_df["Cash Conversion Cycle"], color=PALETTE["accent"], alpha=0.85)
+        ax1.set_title("Cash Conversion Cycle (days)")
+        ax1.grid(axis="y", alpha=0.3)
+    ccc_cols = [c for c in ["DSO (days)", "DIO (days)", "DPO (days)"] if c in wc_df.columns]
+    if ccc_cols:
+        x = range(len(wc_df))
+        width = 0.25
+        for i, col in enumerate(ccc_cols):
+            ax2.bar([xi + i * width for xi in x], wc_df[col], width, label=col.replace(" (days)", ""))
+        ax2.set_xticks([xi + width for xi in x])
+        ax2.set_xticklabels(wc_df.index.astype(str))
+        ax2.set_title("Working Capital Components")
+        ax2.legend()
+        ax2.grid(axis="y", alpha=0.3)
+    plt.tight_layout()
+    _save(fig, output_path)
+
+
+def plot_margin_bridge(bridge_df: pd.DataFrame, output_path: Path) -> None:
+    if bridge_df.empty:
+        return
+    latest = bridge_df.iloc[-1]
+    components = ["Revenue Volume", "Margin / Mix", "OpEx Change", "Below-the-Line"]
+    vals = [latest[c] for c in components if c in latest.index]
+    labels = [c for c in components if c in latest.index]
+    colors = [PALETTE["positive"] if v >= 0 else PALETTE["negative"] for v in vals]
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.bar(labels, vals, color=colors, alpha=0.85)
+    ax.set_title(f"Tesla (TSLA) — Net Income Bridge ({latest.get('period', '')})")
+    ax.yaxis.set_major_formatter(mticker.FuncFormatter(_fmt_billions))
+    ax.grid(axis="y", alpha=0.3)
+    ax.axhline(0, color="gray", linewidth=0.8)
+    plt.xticks(rotation=15, ha="right")
+    _save(fig, output_path)
+
+
+def plot_leverage(cap_df: pd.DataFrame, output_path: Path) -> None:
+    fig, ax1 = plt.subplots(figsize=(10, 5))
+    if "Net Debt / EBITDA" in cap_df.columns:
+        ax1.bar(cap_df.index.astype(str), cap_df["Net Debt / EBITDA"], color=PALETTE["secondary"], alpha=0.8, label="Net Debt / EBITDA")
+    ax1.set_ylabel("Leverage (x)")
+    ax1.set_title("Tesla (TSLA) — Capital Structure")
+    ax1.grid(axis="y", alpha=0.3)
+    if "Interest Coverage" in cap_df.columns:
+        ax2 = ax1.twinx()
+        ax2.plot(cap_df.index, cap_df["Interest Coverage"], "o-", color=PALETTE["accent"], linewidth=2, label="Interest Coverage")
+        ax2.set_ylabel("Interest Coverage (x)")
+    ax1.legend(loc="upper left")
+    _save(fig, output_path)
+
+
+def plot_fcf_trend(fcf_df: pd.DataFrame, output_path: Path) -> None:
+    cols = ["Operating Cash Flow", "Capital Expenditure", "Free Cash Flow"]
+    available = [c for c in cols if c in fcf_df.columns]
+    fig, ax = plt.subplots(figsize=(10, 5))
+    x = fcf_df.index.astype(str)
+    width = 0.25
+    colors = [PALETTE["positive"], PALETTE["negative"], PALETTE["forecast"]]
+    for i, col in enumerate(available):
+        vals = fcf_df[col].abs() if col == "Capital Expenditure" else fcf_df[col]
+        offset = (i - len(available) / 2 + 0.5) * width
+        ax.bar([int(xi) + offset for xi in x], vals, width, label=col, color=colors[i % 3], alpha=0.85)
+    ax.set_title("Tesla (TSLA) — Cash Flow & Free Cash Flow")
+    ax.yaxis.set_major_formatter(mticker.FuncFormatter(_fmt_billions))
+    ax.legend()
+    ax.grid(axis="y", alpha=0.3)
+    _save(fig, output_path)
+
+
+def plot_dupont(dupont_df: pd.DataFrame, output_path: Path) -> None:
+    fig, ax = plt.subplots(figsize=(10, 5))
+    for col in ["ROE %", "ROA %", "ROIC %"]:
+        if col in dupont_df.columns:
+            ax.plot(dupont_df.index, dupont_df[col], marker="o", linewidth=2.5, label=col)
+    ax.set_title("Tesla (TSLA) — Return Metrics (DuPont Framework)")
+    ax.set_ylabel("Return (%)")
+    ax.legend()
+    ax.grid(alpha=0.3)
+    ax.axhline(0, color="gray", linewidth=0.8, linestyle="--")
+    _save(fig, output_path)
+
+
+def plot_working_capital(wc_df: pd.DataFrame, output_path: Path) -> None:
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+    if "Cash Conversion Cycle" in wc_df.columns:
+        ax1.bar(wc_df.index.astype(str), wc_df["Cash Conversion Cycle"], color=PALETTE["accent"], alpha=0.85)
+        ax1.set_title("Cash Conversion Cycle (days)")
+        ax1.grid(axis="y", alpha=0.3)
+    ccc_cols = [c for c in ["DSO (days)", "DIO (days)", "DPO (days)"] if c in wc_df.columns]
+    if ccc_cols:
+        x = range(len(wc_df))
+        width = 0.25
+        for i, col in enumerate(ccc_cols):
+            ax2.bar([xi + i * width for xi in x], wc_df[col], width, label=col.replace(" (days)", ""))
+        ax2.set_xticks([xi + width for xi in x])
+        ax2.set_xticklabels(wc_df.index.astype(str))
+        ax2.set_title("Working Capital Components")
+        ax2.legend()
+        ax2.grid(axis="y", alpha=0.3)
+    plt.tight_layout()
+    _save(fig, output_path)
+
+
+def plot_margin_bridge(bridge_df: pd.DataFrame, output_path: Path) -> None:
+    if bridge_df.empty:
+        return
+    latest = bridge_df.iloc[-1]
+    components = ["Revenue Volume", "Margin / Mix", "OpEx Change", "Below-the-Line"]
+    vals = [latest[c] for c in components if c in latest.index]
+    labels = [c for c in components if c in latest.index]
+    colors = [PALETTE["positive"] if v >= 0 else PALETTE["negative"] for v in vals]
+    fig, ax = plt.subplots(figsize=(10, 5))
+    ax.bar(labels, vals, color=colors, alpha=0.85)
+    ax.set_title(f"Tesla (TSLA) — Net Income Bridge ({latest.get('period', '')})")
+    ax.yaxis.set_major_formatter(mticker.FuncFormatter(_fmt_billions))
+    ax.grid(axis="y", alpha=0.3)
+    ax.axhline(0, color="gray", linewidth=0.8)
+    plt.xticks(rotation=15, ha="right")
+    _save(fig, output_path)
+
+
+def plot_leverage(cap_df: pd.DataFrame, output_path: Path) -> None:
+    fig, ax1 = plt.subplots(figsize=(10, 5))
+    if "Net Debt / EBITDA" in cap_df.columns:
+        ax1.bar(cap_df.index.astype(str), cap_df["Net Debt / EBITDA"], color=PALETTE["secondary"], alpha=0.8, label="Net Debt / EBITDA")
+    ax1.set_ylabel("Leverage (x)")
+    ax1.set_title("Tesla (TSLA) — Capital Structure")
+    ax1.grid(axis="y", alpha=0.3)
+    if "Interest Coverage" in cap_df.columns:
+        ax2 = ax1.twinx()
+        ax2.plot(cap_df.index, cap_df["Interest Coverage"], "o-", color=PALETTE["accent"], linewidth=2, label="Interest Coverage")
+        ax2.set_ylabel("Interest Coverage (x)")
+    ax1.legend(loc="upper left")
+    _save(fig, output_path)
