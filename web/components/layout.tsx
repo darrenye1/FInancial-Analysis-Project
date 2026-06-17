@@ -112,23 +112,12 @@ export function Hero({
   industry: string;
 }) {
   return (
-    <div className="relative overflow-hidden border-b border-brand-border/40">
-      <div className="relative mx-auto max-w-7xl px-6 pb-14 pt-8">
-        <div className="relative mb-10 overflow-hidden rounded-2xl border border-brand-border shadow-2xl shadow-black/40">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/cover/tesla-cover-linkedin.png"
-            alt="Tesla Financial Analysis project cover"
-            className="aspect-[16/9] w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/90 via-brand-dark/20 to-transparent" />
-          <div className="absolute bottom-0 left-0 p-6 md:p-8">
-            <p className="text-xs font-medium uppercase tracking-widest text-red-400">Case Study</p>
-            <h2 className="mt-1 font-display text-3xl font-bold text-white md:text-4xl">{name}</h2>
-          </div>
-        </div>
-
-        <p className="max-w-2xl text-brand-muted">
+    <div className="relative overflow-hidden border-b border-brand-border/40 py-14">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-brand-red/15 via-transparent to-transparent" />
+      <div className="relative mx-auto max-w-7xl px-6">
+        <p className="mb-3 text-sm font-medium uppercase tracking-widest text-red-400">Case Study</p>
+        <h2 className="font-display text-4xl font-bold tracking-tight text-white md:text-5xl">{name}</h2>
+        <p className="mt-4 max-w-2xl text-brand-muted">
           End-to-end financial modeling with real Yahoo Finance data — P&amp;L analysis, budgeting,
           forecasting, and sensitivity analysis.
         </p>
