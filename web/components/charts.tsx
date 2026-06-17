@@ -1,0 +1,219 @@
+"use client";
+
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+import { Card } from "./ui";
+import { formatBillions } from "@/lib/data";
+
+const COLORS = ["#CC0000", "#e94560", "#3498db", "#2ecc71"];
+
+function ChartTooltip({ active, payload, label }: { active?: boolean; payload?: { name: string; value: number; color: string }[]; label?: string }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="rounded-lg border border-brand-border bg-brand-dark/95 px-4 py-3 shadow-xl">
+      <p className="mb-2 text-sm font-medium text-white">{label}</p>
+      {payload.map((p) => (
+        <p key={p.name} className="text-sm" style={{ color: p.color }}>
+          {p.name}: {formatBillions(p.value)}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+export function RevenueProfitChart({ data }: { data: Record<string, number | string | null>[] }) {
+  const chartData = data.filter((d) => d["Total Revenue"] != null);
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Revenue & Profitability</h3>
+      <ResponsiveContainer width="100%" height={320}>
+        <BarChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="year" stroke="#8892a4" />
+          <YAxis tickFormatter={(v) => `$${(v / 1e9).toFixed(0)}B`} stroke="#8892a4" />
+          <Tooltip content={<ChartTooltip />} />
+          <Legend />
+          <Bar dataKey="Total Revenue" fill={COLORS[0]} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Gross Profit" fill={COLORS[1]} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Operating Income" fill={COLORS[2]} radius={[4, 4, 0, 0]} />
+          <Bar dataKey="Net Income" fill={COLORS[3]} radius={[4, 4, 0, 0]} />
+        </BarChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function MarginChart({ data }: { data: Record<string, number | string | null>[] }) {
+  const keys = Object.keys(data[0] || {}).filter((k) => k !== "year");
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Profit Margins (%)</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="year" stroke="#8892a4" />
+          <YAxis stroke="#8892a4" unit="%" />
+          <Tooltip />
+          <Legend />
+          {keys.map((key, i) => (
+            <Line key={key} type="monotone" dataKey={key} stroke={COLORS[i % COLORS.length]} strokeWidth={2.5} dot={{ r: 4 }} />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function ForecastChart({ data }: { data: Record<string, number | string | null>[] }) {
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Revenue Forecast</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="Year" stroke="#8892a4" />
+          <YAxis tickFormatter={(v) => `$${(v / 1e9).toFixed(0)}B`} stroke="#8892a4" />
+          <Tooltip content={<ChartTooltip />} />
+          <Line
+            type="monotone"
+            dataKey="Total Revenue"
+            stroke="#CC0000"
+            strokeWidth={2.5}
+            dot={(props) => {
+              const { cx, cy, payload } = props;
+              const color = payload.Type === "Forecast" ? "#3498db" : "#CC0000";
+              return <circle cx={cx} cy={cy} r={5} fill={color} />;
+            }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function ScenarioChart({
+  data,
+}: {
+  data: { Year: number; Scenario: string; "Total Revenue": number }[];
+}) {
+  const years = [...new Set(data.map((d) => d.Year))].sort();
+  const scenarios = ["Bear", "Base", "Bull"];
+  const chartData = years.map((year) => {
+    const point: Record<string, number> = { year };
+    for (const s of scenarios) {
+      const row = data.find((d) => d.Year === year && d.Scenario === s);
+      if (row) point[s] = row["Total Revenue"];
+    }
+    return point;
+  });
+
+  const scenarioColors: Record<string, string> = { Bear: "#e74c3c", Base: "#95a5a6", Bull: "#2ecc71" };
+
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Scenario Analysis</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="year" stroke="#8892a4" />
+          <YAxis tickFormatter={(v) => `$${(v / 1e9).toFixed(0)}B`} stroke="#8892a4" />
+          <Tooltip content={<ChartTooltip />} />
+          <Legend />
+          {scenarios.map((s) => (
+            <Line key={s} type="monotone" dataKey={s} stroke={scenarioColors[s]} strokeWidth={2.5} dot={{ r: 4 }} />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function StockPriceChart({ data }: { data: { date: string; close: number }[] }) {
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Stock Price (1Y)</h3>
+      <ResponsiveContainer width="100%" height={280}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="date" stroke="#8892a4" tick={{ fontSize: 10 }} interval="preserveStartEnd" />
+          <YAxis stroke="#8892a4" domain={["auto", "auto"]} />
+          <Tooltip />
+          <Line type="monotone" dataKey="close" stroke="#CC0000" strokeWidth={1.5} dot={false} />
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function TornadoChart({
+  data,
+}: {
+  data: { Driver: string; "Low Case": number; "High Case": number; Base: number; Range: number }[];
+}) {
+  const chartData = data.map((d) => ({
+    driver: d.Driver.replace("Total ", "").replace("Cost Of Revenue", "COGS"),
+    low: d["Low Case"] - d.Base,
+    high: d["High Case"] - d.Base,
+    base: d.Base,
+  }));
+
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Sensitivity Tornado — Net Income</h3>
+      <ResponsiveContainer width="100%" height={260}>
+        <BarChart data={chartData} layout="vertical">
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis type="number" tickFormatter={(v) => `$${(v / 1e9).toFixed(1)}B`} stroke="#8892a4" />
+          <YAxis type="category" dataKey="driver" width={80} stroke="#8892a4" tick={{ fontSize: 11 }} />
+          <Tooltip formatter={(v: number) => formatBillions(Math.abs(v))} />
+          <Bar dataKey="low" stackId="a" fill="#e74c3c" />
+          <Bar dataKey="high" stackId="a" fill="#2ecc71" />
+        </BarChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function GrowthChart({ data }: { data: Record<string, number | string | null>[] }) {
+  const revenueKey = Object.keys(data[0] || {}).find((k) => k.includes("Total Revenue"));
+  const niKey = Object.keys(data[0] || {}).find((k) => k.includes("Net Income"));
+  const keys = [revenueKey, niKey].filter(Boolean) as string[];
+  const chartData = data.filter((d) => keys.some((k) => d[k] != null));
+
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Year-over-Year Growth (%)</h3>
+      <ResponsiveContainer width="100%" height={280}>
+        <BarChart data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="year" stroke="#8892a4" />
+          <YAxis stroke="#8892a4" unit="%" />
+          <Tooltip />
+          <Legend />
+          {keys.map((key, i) => (
+            <Bar key={key} dataKey={key} name={key.replace(" YoY %", "")} radius={[4, 4, 0, 0]}>
+              {chartData.map((entry, idx) => (
+                <Cell
+                  key={idx}
+                  fill={(entry[key] as number) >= 0 ? "#2ecc71" : "#e74c3c"}
+                  opacity={i === 0 ? 1 : 0.7}
+                />
+              ))}
+            </Bar>
+          ))}
+        </BarChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}

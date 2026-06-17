@@ -1,0 +1,22 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Inter:wght@400;500;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-brand-dark text-white antialiased;
+}
+
+/* Recharts legend text */
+.recharts-legend-item-text {
+  color: #8892a4 !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  fill: #8892a4;
+}

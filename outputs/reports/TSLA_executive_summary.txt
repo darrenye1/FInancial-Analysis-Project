@@ -1,0 +1,33 @@
+EXECUTIVE SUMMARY — Tesla, Inc. (TSLA)
+=======================================================
+
+Sector: Consumer Cyclical | Industry: Auto Manufacturers
+Analysis Period: 2021–2025
+
+KEY HIGHLIGHTS
+----------------------------------------
+  Revenue (2025):     $94.83B
+  Net Income (2025):  $3.79B
+  Net Margin:             4.0%
+  Gross Margin:           18.0%
+  Revenue YoY Growth:     -2.9%
+
+FORECAST
+----------------------------------------
+  Revenue (2026):  $107.21B (forecast)
+  Revenue (2027):  $113.52B (forecast)
+  Revenue (2028):  $119.84B (forecast)
+
+SENSITIVITY — Top Drivers (±10%)
+----------------------------------------
+  Cost Of Revenue: impact range $12.16B
+  Total Revenue: impact range $2.56B
+  Operating Expense: impact range $1.92B
+
+METHODOLOGY
+----------------------------------------
+  Data Source: Yahoo Finance API (yfinance)
+  P&L Analysis: Margin trends, YoY growth, expense breakdown
+  Budgeting: CAGR-based assumptions with variance analysis
+  Forecasting: Exponential smoothing + scenario modeling
+  Sensitivity: One-way, two-way tables & tornado chart
