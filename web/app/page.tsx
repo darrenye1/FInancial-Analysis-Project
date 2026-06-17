@@ -7,7 +7,7 @@ import {
   StockPriceChart,
   TornadoChart,
 } from "@/components/charts";
-import { Footer, Header, Hero } from "@/components/layout";
+import { Footer, Header, Hero, ProfileBanner } from "@/components/layout";
 import { Badge, Card, ChartImage, KPICard, Section } from "@/components/ui";
 import { analysisData, formatBillions, formatPercent } from "@/lib/data";
 
@@ -17,6 +17,7 @@ export default function Home() {
 
   return (
     <>
+      <ProfileBanner />
       <Header name={company.name} ticker={ticker} />
       <main>
         <Hero name={company.name} sector={company.sector} industry={company.industry} />

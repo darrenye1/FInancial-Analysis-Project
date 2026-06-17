@@ -10,6 +10,7 @@ module.exports = {
           card: "#1a1a2e",
           border: "#2a2a3e",
           muted: "#8892a4",
+          accent: "#22d3ee",
         },
       },
       fontFamily: {
