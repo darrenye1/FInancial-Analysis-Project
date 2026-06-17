@@ -44,9 +44,11 @@ Open [http://localhost:3000](http://localhost:3000)
 |---------|-------|
 | Root Directory | `web` |
 | Framework Preset | Next.js |
-| Build Command | `npm run build` |
-| Output Directory | `out` |
-| Install Command | `npm install` |
+| Build Command | `npm run build` (default) |
+| Output Directory | *(leave empty — use default)* |
+| Install Command | `npm install` (default) |
+
+> Do **not** set Output Directory to `out`. Vercel deploys Next.js from `.next` automatically.
 
 ## Troubleshooting
 
@@ -62,6 +64,12 @@ Open [http://localhost:3000](http://localhost:3000)
    - `web/lib/format.ts`
    - `.gitignore`
 3. Commit → Push origin → Vercel will redeploy automatically
+
+### Build fails: `routes-manifest.json couldn't be found`
+
+**Cause:** `output: "export"` in `next.config.js` plus Output Directory set to `out` in Vercel conflicts with native Next.js deployment.
+
+**Fix:** Use default Vercel Next.js settings (no custom Output Directory). The project config has been updated — commit and push, then in Vercel go to **Settings → General → Build & Development Settings** and clear the **Output Directory** field if it says `out`.
 
 ### Charts not showing on the live site
 
