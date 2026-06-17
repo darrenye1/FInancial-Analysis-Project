@@ -52,13 +52,16 @@ Open [http://localhost:3000](http://localhost:3000)
 
 ### Build fails: `Module not found: Can't resolve '@/lib/data'`
 
-The `web/lib/` folder must be committed. In GitHub Desktop, confirm these files are checked:
+**Cause:** Python `.gitignore` template includes `lib/`, which blocks `web/lib/` from being pushed to GitHub.
 
-- `web/lib/data.ts`
-- `web/lib/types.ts`
-- `web/lib/format.ts`
-
-Then Commit → Push origin.
+**Fix:**
+1. Ensure `.gitignore` uses `/lib/` (root only) and includes `!web/lib/`
+2. In GitHub Desktop you should now see these files to commit:
+   - `web/lib/data.ts`
+   - `web/lib/types.ts`
+   - `web/lib/format.ts`
+   - `.gitignore`
+3. Commit → Push origin → Vercel will redeploy automatically
 
 ### Charts not showing on the live site
 
