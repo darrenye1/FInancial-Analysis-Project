@@ -5,7 +5,7 @@
     "sector": "Consumer Cyclical",
     "industry": "Auto Manufacturers",
     "employees": 134785,
-    "marketCap": 1519791243264,
+    "marketCap": 1488693755904,
     "currency": "USD"
   },
   "highlights": {
@@ -193,74 +193,74 @@
   "budget": {
     "summary": [
       {
-        "year": 0,
-        "Year": 2021,
+        "fiscalYear": 2021,
+        "Type": "Actual",
+        "label": "2021 Actual",
         "Total Revenue": null,
         "Cost Of Revenue": null,
         "Gross Profit": null,
         "Operating Income": null,
-        "Net Income": null,
-        "Type": "Actual"
+        "Net Income": null
       },
       {
-        "year": 1,
-        "Year": 2022,
+        "fiscalYear": 2022,
+        "Type": "Actual",
+        "label": "2022 Actual",
         "Total Revenue": 81462000000.0,
         "Cost Of Revenue": 60609000000.0,
         "Gross Profit": 20853000000.0,
         "Operating Income": 13832000000.0,
-        "Net Income": 12583000000.0,
-        "Type": "Actual"
+        "Net Income": 12583000000.0
       },
       {
-        "year": 2,
-        "Year": 2023,
+        "fiscalYear": 2023,
+        "Type": "Actual",
+        "label": "2023 Actual",
         "Total Revenue": 96773000000.0,
         "Cost Of Revenue": 79113000000.0,
         "Gross Profit": 17660000000.0,
         "Operating Income": 8891000000.0,
-        "Net Income": 14999000000.0,
-        "Type": "Actual"
+        "Net Income": 14999000000.0
       },
       {
-        "year": 3,
-        "Year": 2024,
+        "fiscalYear": 2024,
+        "Type": "Actual",
+        "label": "2024 Actual",
         "Total Revenue": 97690000000.0,
         "Cost Of Revenue": 80240000000.0,
         "Gross Profit": 17450000000.0,
         "Operating Income": 7760000000.0,
-        "Net Income": 7130000000.0,
-        "Type": "Actual"
+        "Net Income": 7130000000.0
       },
       {
-        "year": 4,
-        "Year": 2025,
+        "fiscalYear": 2025,
+        "Type": "Actual",
+        "label": "2025 Actual",
         "Total Revenue": 94827000000.0,
         "Cost Of Revenue": 77733000000.0,
         "Gross Profit": 17094000000.0,
         "Operating Income": 4849000000.0,
-        "Net Income": 3794000000.0,
-        "Type": "Actual"
+        "Net Income": 3794000000.0
       },
       {
-        "year": 5,
-        "Year": 2025,
+        "fiscalYear": 2025,
+        "Type": "Budget",
+        "label": "2025 Budget",
         "Total Revenue": 102760111000.0,
         "Cost Of Revenue": 87180760000.0,
         "Gross Profit": 15579351000.0,
         "Operating Income": 3915498000.0,
-        "Net Income": 2936623500.0,
-        "Type": "Budget"
+        "Net Income": 2936623500.0
       },
       {
-        "year": 6,
-        "Year": 2026,
+        "fiscalYear": 2026,
+        "Type": "Budget",
+        "label": "2026 Budget",
         "Total Revenue": 108093360760.9,
         "Cost Of Revenue": 94721895740.0,
         "Gross Profit": 13371465020.9,
         "Operating Income": -668314835.2,
-        "Net Income": -501236126.4,
-        "Type": "Budget"
+        "Net Income": -501236126.4
       }
     ],
     "variance": [
@@ -911,11 +911,6 @@
     "fullText": "Executive Overview\nThis report presents a corporate finance FP&A analysis of Tesla, Inc. (TSLA), covering the period 2021–2025. In 2025, the company reported revenue of $94.83B (-2.9% YoY) and net income of $3.79B, with a net margin of 4.0%. The analysis integrates P&L trends, cash flow quality, working capital efficiency, budget variance, forward forecasts, and sensitivity testing to support management-style financial planning and decision-making.\n\nP&L Performance\nGross margin expanded from 17.9% to 18.0% (+0.2pp), while operating margin stood at 5.1% in 2025. The year-over-year net income bridge (2024 → 2025) shows a total change of $-3.34B, driven primarily by revenue volume ($-511.4M), margin/mix ($155.4M), and operating expense ($-2.56B).\n\nCash Flow & Liquidity\nIn 2025, operating cash flow reached $14.75B with free cash flow of $6.22B (FCF margin: 6.6%). The OCF-to-net-income ratio of 3.89x indicates strong earnings quality — cash generation comfortably exceeds reported profits. CapEx intensity was 9.0% of revenue, reflecting continued capital investment in the business.\n\nWorking Capital & Capital Structure\nReturn on equity was 4.6% and ROIC was 5.4% in 2025. DuPont decomposition shows net margin of 4.0%, asset turnover of 0.69x, and equity multiplier of 1.68x. Working capital efficiency: cash conversion cycle of 13 days (DSO 18d, DIO 58d, DPO 63d). Capital structure remains conservative with net debt/EBITDA at -0.15x and interest coverage of 14.3x, indicating ample debt service capacity.\n\nBudget vs Actual\nCompared to the forward budget built on historical CAGR assumptions, 2025 actuals underperformed across all key metrics. Revenue missed budget by -13.3% and net income by -57.0%, classified as unfavorable variance. The largest gap was in operating income, suggesting margin compression and cost overruns relative to plan were the primary drivers of the budget shortfall.\n\nForecast Outlook\nBase-case revenue forecast projects $119.84B by 2028, using exponential smoothing on historical trends. Scenario analysis ranges from $81.30B (bear) to $185.21B (bull), providing a +86.7% planning bandwidth for strategic and budgeting decisions.\n\nSensitivity & Key Risks\nSensitivity analysis (±10% driver changes) identifies Cost Of Revenue as the highest-impact variable on net income, with an impact range of $12.16B. Total Revenue ranks second at $2.56B. FP&A teams should prioritize these drivers in scenario planning and management reporting.\n\nConclusion\nTesla, Inc. faces growth deceleration and margin pressure in the current cycle, yet maintains positive free cash flow and a strong balance sheet. Key FP&A priorities include: (1) monitoring gross margin trends and cost discipline, (2) optimizing working capital as CCC extends, (3) recalibrating budgets to reflect actual performance gaps, and (4) stress-testing forecasts against revenue and COGS sensitivities. This analysis framework is replicable across any public company using standardized Yahoo Finance data."
   },
   "stockPrice": [
-    {
-      "date": "2025-06-16",
-      "close": 329.13,
-      "volume": 83925900
-    },
     {
       "date": "2025-06-17",
       "close": 316.35,
@@ -2169,8 +2164,13 @@
     {
       "date": "2026-06-16",
       "close": 404.66,
-      "volume": 40144700
+      "volume": 40255500
+    },
+    {
+      "date": "2026-06-17",
+      "close": 396.38,
+      "volume": 41080667
     }
   ],
-  "generatedAt": "2026-06-17T01:00:08.404154"
+  "generatedAt": "2026-06-17T22:28:41.628126"
 }

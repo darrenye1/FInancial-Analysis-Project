@@ -26,6 +26,28 @@ from src.sensitivity import SensitivityAnalyzer
 from src.working_capital import WorkingCapitalAnalyzer
 
 
+def _budget_summary_records(df: pd.DataFrame) -> list[dict]:
+    """Budget summary with clear fiscal year + Actual/Budget labels."""
+    records = []
+    for fiscal_year, row in df.iterrows():
+        entry = {
+            "fiscalYear": int(fiscal_year),
+            "Type": row.get("Type", "Actual"),
+            "label": f"{int(fiscal_year)} {row.get('Type', 'Actual')}",
+        }
+        for col, val in row.items():
+            if col == "Type":
+                continue
+            if pd.isna(val):
+                entry[col] = None
+            elif isinstance(val, (np.floating, float)):
+                entry[col] = round(float(val), 2)
+            else:
+                entry[col] = val
+        records.append(entry)
+    return records
+
+
 def _df_to_records(df: pd.DataFrame) -> list[dict]:
     records = []
     for idx, row in df.iterrows():
@@ -159,7 +181,7 @@ def export(ticker: str = "TSLA") -> Path:
             "expenseBreakdown": _df_to_records(expense),
         },
         "budget": {
-            "summary": _df_to_records(budget_summary.reset_index()),
+            "summary": _budget_summary_records(budget_summary),
             "variance": variance.reset_index().to_dict(orient="records") if variance is not None else [],
         },
         "forecast": {

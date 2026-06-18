@@ -307,23 +307,50 @@ export function MarginBridgeChart({ data }: { data: Record<string, number | stri
 }
 
 export function BudgetVsActualChart({ data }: { data: Record<string, number | string | null>[] }) {
-  const chartData = data.filter((d) => d["Total Revenue"] != null);
+  const chartData = data
+    .filter((d) => d["Total Revenue"] != null)
+    .map((d) => {
+      const fiscalYear = d.fiscalYear ?? d.Year ?? d.year;
+      const type = String(d.Type ?? "Actual");
+      return {
+        ...d,
+        label: String(d.label ?? `${fiscalYear} ${type}`),
+      };
+    });
+
   return (
     <Card>
       <h3 className="mb-4 text-lg font-semibold text-white">Revenue: Actual vs Budget</h3>
+      <p className="mb-3 text-xs text-brand-muted">
+        Red = Actual (historical) · Blue = Budget (forward projection from {chartData.find((d) => d.Type === "Budget")?.fiscalYear ?? "base year"} base)
+      </p>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
-          <XAxis dataKey="year" stroke="#8892a4" />
+          <XAxis dataKey="label" stroke="#8892a4" tick={{ fontSize: 11 }} interval={0} angle={-20} textAnchor="end" height={50} />
           <YAxis tickFormatter={(v) => `$${(v / 1e9).toFixed(0)}B`} stroke="#8892a4" />
-          <Tooltip content={<ChartTooltip />} />
-          <Legend />
+          <Tooltip
+            content={({ active, payload }) => {
+              if (!active || !payload?.length) return null;
+              const d = payload[0].payload as Record<string, unknown>;
+              return (
+                <div className="rounded-lg border border-brand-border bg-brand-dark/95 px-4 py-3 shadow-xl">
+                  <p className="text-sm font-medium text-white">{String(d.label)}</p>
+                  <p className="text-sm text-brand-muted">Type: {String(d.Type)}</p>
+                  <p className="text-sm" style={{ color: payload[0].color }}>
+                    Revenue: {formatBillions(d["Total Revenue"] as number)}
+                  </p>
+                </div>
+              );
+            }}
+          />
+          <Legend formatter={(value) => `${value} (see bar color)`} />
           <Bar dataKey="Total Revenue" name="Revenue" radius={[4, 4, 0, 0]}>
             {chartData.map((entry, i) => (
               <Cell
                 key={i}
                 fill={entry.Type === "Budget" ? "#3498db" : "#CC0000"}
-                opacity={entry.Type === "Budget" ? 0.7 : 1}
+                opacity={entry.Type === "Budget" ? 0.85 : 1}
               />
             ))}
           </Bar>
