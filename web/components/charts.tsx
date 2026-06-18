@@ -307,7 +307,9 @@ export function MarginBridgeChart({ data }: { data: Record<string, number | stri
 }
 
 export function BudgetVsActualChart({ data }: { data: Record<string, number | string | null>[] }) {
-  const chartData = data
+  type BudgetPoint = Record<string, number | string | null> & { label: string };
+
+  const chartData: BudgetPoint[] = data
     .filter((d) => d["Total Revenue"] != null)
     .map((d) => {
       const fiscalYear = d.fiscalYear ?? d.Year ?? d.year;
@@ -318,11 +320,13 @@ export function BudgetVsActualChart({ data }: { data: Record<string, number | st
       };
     });
 
+  const budgetBaseYear = chartData.find((d) => d.Type === "Budget")?.fiscalYear ?? "base year";
+
   return (
     <Card>
       <h3 className="mb-4 text-lg font-semibold text-white">Revenue: Actual vs Budget</h3>
       <p className="mb-3 text-xs text-brand-muted">
-        Red = Actual (historical) · Blue = Budget (forward projection from {chartData.find((d) => d.Type === "Budget")?.fiscalYear ?? "base year"} base)
+        Red = Actual (historical) · Blue = Budget (forward projection from {budgetBaseYear} base)
       </p>
       <ResponsiveContainer width="100%" height={300}>
         <BarChart data={chartData}>
@@ -350,7 +354,7 @@ export function BudgetVsActualChart({ data }: { data: Record<string, number | st
               <Cell
                 key={i}
                 fill={entry.Type === "Budget" ? "#3498db" : "#CC0000"}
-                opacity={entry.Type === "Budget" ? 0.85 : 1}
+                opacity={String(entry.Type) === "Budget" ? 0.85 : 1}
               />
             ))}
           </Bar>
