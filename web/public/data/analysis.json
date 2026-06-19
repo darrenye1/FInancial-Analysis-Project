@@ -5,7 +5,7 @@
     "sector": "Consumer Cyclical",
     "industry": "Auto Manufacturers",
     "employees": 134785,
-    "marketCap": 1488693755904,
+    "marketCap": 1458197364736,
     "currency": "USD"
   },
   "highlights": {
@@ -301,100 +301,86 @@
   "forecast": {
     "revenue": [
       {
-        "year": 0,
-        "Year": 2022,
+        "year": 2022,
         "Total Revenue": 81462000000.0,
         "Type": "Actual"
       },
       {
-        "year": 1,
-        "Year": 2023,
+        "year": 2023,
         "Total Revenue": 96773000000.0,
         "Type": "Actual"
       },
       {
-        "year": 2,
-        "Year": 2024,
+        "year": 2024,
         "Total Revenue": 97690000000.0,
         "Type": "Actual"
       },
       {
-        "year": 3,
-        "Year": 2025,
+        "year": 2025,
         "Total Revenue": 94827000000.0,
         "Type": "Actual"
       },
       {
-        "year": 4,
-        "Year": 2026,
+        "year": 2026,
         "Total Revenue": 107210417556.22,
         "Type": "Forecast"
       },
       {
-        "year": 5,
-        "Year": 2027,
+        "year": 2027,
         "Total Revenue": 113523003155.23,
         "Type": "Forecast"
       },
       {
-        "year": 6,
-        "Year": 2028,
+        "year": 2028,
         "Total Revenue": 119835588754.24,
         "Type": "Forecast"
       }
     ],
     "multiMetric": [
       {
-        "year": 0,
-        "Year": 2022,
+        "year": 2022,
         "Total Revenue": 81462000000.0,
         "Type": "Actual",
         "Net Income": 12583000000.0,
         "Operating Income": 13832000000.0
       },
       {
-        "year": 1,
-        "Year": 2023,
+        "year": 2023,
         "Total Revenue": 96773000000.0,
         "Type": "Actual",
         "Net Income": 14999000000.0,
         "Operating Income": 8891000000.0
       },
       {
-        "year": 2,
-        "Year": 2024,
+        "year": 2024,
         "Total Revenue": 97690000000.0,
         "Type": "Actual",
         "Net Income": 7130000000.0,
         "Operating Income": 7760000000.0
       },
       {
-        "year": 3,
-        "Year": 2025,
+        "year": 2025,
         "Total Revenue": 94827000000.0,
         "Type": "Actual",
         "Net Income": 3794000000.0,
         "Operating Income": 4849000000.0
       },
       {
-        "year": 4,
-        "Year": 2026,
+        "year": 2026,
         "Total Revenue": 107210417556.22,
         "Type": "Forecast",
         "Net Income": 2772475854.6,
         "Operating Income": 2252414646.29
       },
       {
-        "year": 5,
-        "Year": 2027,
+        "year": 2027,
         "Total Revenue": 113523003155.23,
         "Type": "Forecast",
         "Net Income": 166831358.65,
         "Operating Income": -378044128.38
       },
       {
-        "year": 6,
-        "Year": 2028,
+        "year": 2028,
         "Total Revenue": 119835588754.24,
         "Type": "Forecast",
         "Net Income": -2438813137.29,
@@ -881,7 +867,7 @@
       },
       {
         "title": "P&L Performance",
-        "body": "Gross margin expanded from 17.9% to 18.0% (+0.2pp), while operating margin stood at 5.1% in 2025. The year-over-year net income bridge (2024 → 2025) shows a total change of $-3.34B, driven primarily by revenue volume ($-511.4M), margin/mix ($155.4M), and operating expense ($-2.56B)."
+        "body": "Gross margin expanded from 17.9% to 18.0% (+0.2pp), while operating margin compressed from 7.9% to 5.1% (-2.8pp) in 2025. The year-over-year net income bridge (2024 → 2025) shows a total change of $-3.34B, comprising revenue volume ($-511.4M), margin/mix ($155.4M), operating expense ($-2.56B), below-the-line items ($-425.0M)."
       },
       {
         "title": "Cash Flow & Liquidity",
@@ -889,33 +875,28 @@
       },
       {
         "title": "Working Capital & Capital Structure",
-        "body": "Return on equity was 4.6% and ROIC was 5.4% in 2025. DuPont decomposition shows net margin of 4.0%, asset turnover of 0.69x, and equity multiplier of 1.68x. Working capital efficiency: cash conversion cycle of 13 days (DSO 18d, DIO 58d, DPO 63d). Capital structure remains conservative with net debt/EBITDA at -0.15x and interest coverage of 14.3x, indicating ample debt service capacity."
+        "body": "Return on equity was 4.6% and ROIC was 5.4% in 2025. DuPont decomposition shows net margin of 4.0%, asset turnover of 0.69x, and equity multiplier of 1.68x. Working capital efficiency: cash conversion cycle of 13 days (DSO 18d, DIO 58d, DPO 63d). Capital structure remains conservative with a net cash position (net debt/EBITDA of -0.15x) and interest coverage of 14.3x, indicating ample liquidity and debt service capacity."
       },
       {
         "title": "Budget vs Actual",
-        "body": "Compared to the forward budget built on historical CAGR assumptions, 2025 actuals underperformed across all key metrics. Revenue missed budget by -13.3% and net income by -57.0%, classified as unfavorable variance. The largest gap was in operating income, suggesting margin compression and cost overruns relative to plan were the primary drivers of the budget shortfall."
+        "body": "Compared to the forward budget built on stated growth assumptions, 2025 actuals underperformed across all key metrics. Revenue missed budget by -13.3% and net income by -57.0%, classified as unfavorable variance. Operating income variance was -58.8% — the largest relative gap — suggesting margin compression and cost overruns relative to plan were the primary drivers of the budget shortfall."
       },
       {
         "title": "Forecast Outlook",
-        "body": "Base-case revenue forecast projects $119.84B by 2028, using exponential smoothing on historical trends. Scenario analysis ranges from $81.30B (bear) to $185.21B (bull), providing a +86.7% planning bandwidth for strategic and budgeting decisions."
+        "body": "Base-case revenue forecast projects $119.84B by 2028, using exponential smoothing on historical trends. Scenario analysis ranges from $81.30B (bear) to $185.21B (bull) in 2028, a 86.7% spread relative to the base forecast for strategic planning."
       },
       {
         "title": "Sensitivity & Key Risks",
-        "body": "Sensitivity analysis (±10% driver changes) identifies Cost Of Revenue as the highest-impact variable on net income, with an impact range of $12.16B. Total Revenue ranks second at $2.56B. FP&A teams should prioritize these drivers in scenario planning and management reporting."
+        "body": "Sensitivity analysis (±10% driver changes) identifies Cost Of Revenue as the highest-impact variable on net income, with a net income swing of $12.16B. Total Revenue ranks second with a $2.56B net income swing. FP&A teams should prioritize these drivers in scenario planning and management reporting."
       },
       {
         "title": "Conclusion",
-        "body": "Tesla, Inc. faces growth deceleration and margin pressure in the current cycle, yet maintains positive free cash flow and a strong balance sheet. Key FP&A priorities include: (1) monitoring gross margin trends and cost discipline, (2) optimizing working capital as CCC extends, (3) recalibrating budgets to reflect actual performance gaps, and (4) stress-testing forecasts against revenue and COGS sensitivities. This analysis framework is replicable across any public company using standardized Yahoo Finance data."
+        "body": "Tesla, Inc. faces growth deceleration and margin pressure in the current cycle, yet maintains positive free cash flow and a strong balance sheet. Key FP&A priorities include: (1) monitoring gross margin trends and cost discipline, (2) sustaining recent working capital improvements, (3) recalibrating budgets to reflect actual performance gaps, and (4) stress-testing forecasts against revenue and COGS sensitivities. This analysis framework is replicable across any public company using standardized Yahoo Finance data."
       }
     ],
-    "fullText": "Executive Overview\nThis report presents a corporate finance FP&A analysis of Tesla, Inc. (TSLA), covering the period 2021–2025. In 2025, the company reported revenue of $94.83B (-2.9% YoY) and net income of $3.79B, with a net margin of 4.0%. The analysis integrates P&L trends, cash flow quality, working capital efficiency, budget variance, forward forecasts, and sensitivity testing to support management-style financial planning and decision-making.\n\nP&L Performance\nGross margin expanded from 17.9% to 18.0% (+0.2pp), while operating margin stood at 5.1% in 2025. The year-over-year net income bridge (2024 → 2025) shows a total change of $-3.34B, driven primarily by revenue volume ($-511.4M), margin/mix ($155.4M), and operating expense ($-2.56B).\n\nCash Flow & Liquidity\nIn 2025, operating cash flow reached $14.75B with free cash flow of $6.22B (FCF margin: 6.6%). The OCF-to-net-income ratio of 3.89x indicates strong earnings quality — cash generation comfortably exceeds reported profits. CapEx intensity was 9.0% of revenue, reflecting continued capital investment in the business.\n\nWorking Capital & Capital Structure\nReturn on equity was 4.6% and ROIC was 5.4% in 2025. DuPont decomposition shows net margin of 4.0%, asset turnover of 0.69x, and equity multiplier of 1.68x. Working capital efficiency: cash conversion cycle of 13 days (DSO 18d, DIO 58d, DPO 63d). Capital structure remains conservative with net debt/EBITDA at -0.15x and interest coverage of 14.3x, indicating ample debt service capacity.\n\nBudget vs Actual\nCompared to the forward budget built on historical CAGR assumptions, 2025 actuals underperformed across all key metrics. Revenue missed budget by -13.3% and net income by -57.0%, classified as unfavorable variance. The largest gap was in operating income, suggesting margin compression and cost overruns relative to plan were the primary drivers of the budget shortfall.\n\nForecast Outlook\nBase-case revenue forecast projects $119.84B by 2028, using exponential smoothing on historical trends. Scenario analysis ranges from $81.30B (bear) to $185.21B (bull), providing a +86.7% planning bandwidth for strategic and budgeting decisions.\n\nSensitivity & Key Risks\nSensitivity analysis (±10% driver changes) identifies Cost Of Revenue as the highest-impact variable on net income, with an impact range of $12.16B. Total Revenue ranks second at $2.56B. FP&A teams should prioritize these drivers in scenario planning and management reporting.\n\nConclusion\nTesla, Inc. faces growth deceleration and margin pressure in the current cycle, yet maintains positive free cash flow and a strong balance sheet. Key FP&A priorities include: (1) monitoring gross margin trends and cost discipline, (2) optimizing working capital as CCC extends, (3) recalibrating budgets to reflect actual performance gaps, and (4) stress-testing forecasts against revenue and COGS sensitivities. This analysis framework is replicable across any public company using standardized Yahoo Finance data."
+    "fullText": "Executive Overview\nThis report presents a corporate finance FP&A analysis of Tesla, Inc. (TSLA), covering the period 2021–2025. In 2025, the company reported revenue of $94.83B (-2.9% YoY) and net income of $3.79B, with a net margin of 4.0%. The analysis integrates P&L trends, cash flow quality, working capital efficiency, budget variance, forward forecasts, and sensitivity testing to support management-style financial planning and decision-making.\n\nP&L Performance\nGross margin expanded from 17.9% to 18.0% (+0.2pp), while operating margin compressed from 7.9% to 5.1% (-2.8pp) in 2025. The year-over-year net income bridge (2024 → 2025) shows a total change of $-3.34B, comprising revenue volume ($-511.4M), margin/mix ($155.4M), operating expense ($-2.56B), below-the-line items ($-425.0M).\n\nCash Flow & Liquidity\nIn 2025, operating cash flow reached $14.75B with free cash flow of $6.22B (FCF margin: 6.6%). The OCF-to-net-income ratio of 3.89x indicates strong earnings quality — cash generation comfortably exceeds reported profits. CapEx intensity was 9.0% of revenue, reflecting continued capital investment in the business.\n\nWorking Capital & Capital Structure\nReturn on equity was 4.6% and ROIC was 5.4% in 2025. DuPont decomposition shows net margin of 4.0%, asset turnover of 0.69x, and equity multiplier of 1.68x. Working capital efficiency: cash conversion cycle of 13 days (DSO 18d, DIO 58d, DPO 63d). Capital structure remains conservative with a net cash position (net debt/EBITDA of -0.15x) and interest coverage of 14.3x, indicating ample liquidity and debt service capacity.\n\nBudget vs Actual\nCompared to the forward budget built on stated growth assumptions, 2025 actuals underperformed across all key metrics. Revenue missed budget by -13.3% and net income by -57.0%, classified as unfavorable variance. Operating income variance was -58.8% — the largest relative gap — suggesting margin compression and cost overruns relative to plan were the primary drivers of the budget shortfall.\n\nForecast Outlook\nBase-case revenue forecast projects $119.84B by 2028, using exponential smoothing on historical trends. Scenario analysis ranges from $81.30B (bear) to $185.21B (bull) in 2028, a 86.7% spread relative to the base forecast for strategic planning.\n\nSensitivity & Key Risks\nSensitivity analysis (±10% driver changes) identifies Cost Of Revenue as the highest-impact variable on net income, with a net income swing of $12.16B. Total Revenue ranks second with a $2.56B net income swing. FP&A teams should prioritize these drivers in scenario planning and management reporting.\n\nConclusion\nTesla, Inc. faces growth deceleration and margin pressure in the current cycle, yet maintains positive free cash flow and a strong balance sheet. Key FP&A priorities include: (1) monitoring gross margin trends and cost discipline, (2) sustaining recent working capital improvements, (3) recalibrating budgets to reflect actual performance gaps, and (4) stress-testing forecasts against revenue and COGS sensitivities. This analysis framework is replicable across any public company using standardized Yahoo Finance data."
   },
   "stockPrice": [
-    {
-      "date": "2025-06-17",
-      "close": 316.35,
-      "volume": 88282700
-    },
     {
       "date": "2025-06-18",
       "close": 322.05,
@@ -2169,8 +2150,13 @@
     {
       "date": "2026-06-17",
       "close": 396.38,
-      "volume": 41080667
+      "volume": 43376000
+    },
+    {
+      "date": "2026-06-18",
+      "close": 388.23,
+      "volume": 18494312
     }
   ],
-  "generatedAt": "2026-06-17T22:28:41.628126"
+  "generatedAt": "2026-06-18T10:55:54.746848"
 }

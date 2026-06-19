@@ -82,7 +82,7 @@ export function ForecastChart({ data }: { data: Record<string, number | string |
       <ResponsiveContainer width="100%" height={300}>
         <LineChart data={data}>
           <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
-          <XAxis dataKey="Year" stroke="#8892a4" />
+          <XAxis dataKey="year" stroke="#8892a4" />
           <YAxis tickFormatter={(v) => `$${(v / 1e9).toFixed(0)}B`} stroke="#8892a4" />
           <Tooltip content={<ChartTooltip />} />
           <Line
@@ -97,6 +97,58 @@ export function ForecastChart({ data }: { data: Record<string, number | string |
               return <circle cx={cx} cy={cy} r={5} fill={color} />;
             }}
           />
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function ExpenseBreakdownChart({ data }: { data: Record<string, number | string | null>[] }) {
+  const keys = Object.keys(data[0] || {}).filter((k) => k !== "year");
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">Expense as % of Revenue</h3>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis dataKey="year" stroke="#8892a4" />
+          <YAxis stroke="#8892a4" unit="%" />
+          <Tooltip />
+          <Legend />
+          {keys.map((key, i) => (
+            <Line key={key} type="monotone" dataKey={key} stroke={COLORS[i % COLORS.length]} strokeWidth={2.5} dot={{ r: 4 }} />
+          ))}
+        </LineChart>
+      </ResponsiveContainer>
+    </Card>
+  );
+}
+
+export function OneWaySensitivityChart({
+  data,
+}: {
+  data: Record<string, number | null>[];
+}) {
+  const changeKey = Object.keys(data[0] || {}).find((k) => k.includes("Change %")) ?? "change";
+  return (
+    <Card>
+      <h3 className="mb-4 text-lg font-semibold text-white">One-Way Sensitivity — Net Income</h3>
+      <p className="mb-3 text-xs text-brand-muted">Revenue ±20% impact on net income (base year)</p>
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#2a2a3e" />
+          <XAxis
+            dataKey={changeKey}
+            stroke="#8892a4"
+            tickFormatter={(v) => `${v}%`}
+            label={{ value: "Revenue change", position: "insideBottom", offset: -4, fill: "#8892a4" }}
+          />
+          <YAxis tickFormatter={(v) => `$${(Number(v) / 1e9).toFixed(1)}B`} stroke="#8892a4" />
+          <Tooltip
+            formatter={(v) => formatBillions(Number(v))}
+            labelFormatter={(l) => `Revenue change: ${l}%`}
+          />
+          <Line type="monotone" dataKey="Adjusted Net Income" stroke="#CC0000" strokeWidth={2.5} dot={{ r: 4 }} />
         </LineChart>
       </ResponsiveContainer>
     </Card>

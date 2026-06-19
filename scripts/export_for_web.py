@@ -185,8 +185,8 @@ def export(ticker: str = "TSLA") -> Path:
             "variance": variance.reset_index().to_dict(orient="records") if variance is not None else [],
         },
         "forecast": {
-            "revenue": _df_to_records(revenue_fc.reset_index()),
-            "multiMetric": _df_to_records(multi_fc.reset_index()),
+            "revenue": _df_to_records(revenue_fc),
+            "multiMetric": _df_to_records(multi_fc),
             "scenarios": scenarios.to_dict(orient="records"),
         },
         "sensitivity": {

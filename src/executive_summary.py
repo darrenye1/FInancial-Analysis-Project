@@ -94,27 +94,36 @@ class ExecutiveSummaryGenerator:
         gm = self.margins.loc[y, "Gross Margin %"]
         om = self.margins.loc[y, "Operating Margin %"]
         gm_p = self.margins.loc[p, "Gross Margin %"]
+        om_p = self.margins.loc[p, "Operating Margin %"]
         ni_chg = float(self.income.loc[y, "Net Income"]) - float(self.income.loc[p, "Net Income"])
 
         gm_chg = gm - gm_p
-        margin_word = "expanded" if gm_chg > 0 else "compressed" if gm_chg < 0 else "held steady at"
+        om_chg = om - om_p
+        gm_word = "expanded" if gm_chg > 0 else "compressed" if gm_chg < 0 else "held steady at"
+        om_word = "compressed" if om_chg < 0 else "expanded" if om_chg > 0 else "held steady at"
+
         if gm_chg == 0:
             margin_line = f"Gross margin held steady at {gm:.1f}% in {y}."
         else:
             margin_line = (
-                f"Gross margin {margin_word} from {gm_p:.1f}% to {gm:.1f}% ({gm_chg:+.1f}pp), "
-                f"while operating margin stood at {om:.1f}% in {y}."
+                f"Gross margin {gm_word} from {gm_p:.1f}% to {gm:.1f}% ({gm_chg:+.1f}pp), "
+                f"while operating margin {om_word} from {om_p:.1f}% to {om:.1f}% ({om_chg:+.1f}pp) in {y}."
             )
 
         lines = [margin_line]
 
         if not self.bridge.empty:
             b = self.bridge.iloc[-1]
+            components = [
+                ("revenue volume", b["Revenue Volume"]),
+                ("margin/mix", b["Margin / Mix"]),
+                ("operating expense", b["OpEx Change"]),
+                ("below-the-line items", b["Below-the-Line"]),
+            ]
+            comp_text = ", ".join(f"{name} ({_fmt_b(val)})" for name, val in components)
             lines.append(
                 f"The year-over-year net income bridge ({b['period']}) shows a total change of "
-                f"{_fmt_b(b['Total Δ Net Income'])}, driven primarily by "
-                f"revenue volume ({_fmt_b(b['Revenue Volume'])}), margin/mix ({_fmt_b(b['Margin / Mix'])}), "
-                f"and operating expense ({_fmt_b(b['OpEx Change'])})."
+                f"{_fmt_b(b['Total Δ Net Income'])}, comprising {comp_text}."
             )
         else:
             lines.append(f"Net income changed by {_fmt_b(ni_chg)} versus the prior year.")
@@ -166,10 +175,18 @@ class ExecutiveSummaryGenerator:
         if y in self.cap.index:
             nd_ebitda = self.cap.loc[y, "Net Debt / EBITDA"]
             ic = self.cap.loc[y, "Interest Coverage"]
-            parts.append(
-                f"Capital structure remains conservative with net debt/EBITDA at {nd_ebitda:.2f}x "
-                f"and interest coverage of {ic:.1f}x, indicating ample debt service capacity."
-            )
+            if nd_ebitda is not None and not pd.isna(nd_ebitda) and nd_ebitda < 0:
+                cap_line = (
+                    f"Capital structure remains conservative with a net cash position "
+                    f"(net debt/EBITDA of {nd_ebitda:.2f}x) and interest coverage of {ic:.1f}x, "
+                    f"indicating ample liquidity and debt service capacity."
+                )
+            else:
+                cap_line = (
+                    f"Capital structure shows net debt/EBITDA at {nd_ebitda:.2f}x "
+                    f"and interest coverage of {ic:.1f}x."
+                )
+            parts.append(cap_line)
 
         return " ".join(parts) if parts else "Corporate finance metrics unavailable."
 
@@ -179,12 +196,13 @@ class ExecutiveSummaryGenerator:
 
         rev_var = self.variance.loc["Total Revenue", "Variance %"]
         ni_var = self.variance.loc["Net Income", "Variance %"]
+        oi_var = self.variance.loc["Operating Income", "Variance %"]
         return (
-            f"Compared to the forward budget built on historical CAGR assumptions, {self.latest} actuals "
+            f"Compared to the forward budget built on stated growth assumptions, {self.latest} actuals "
             f"underperformed across all key metrics. Revenue missed budget by {rev_var:+.1f}% and net income "
-            f"by {ni_var:+.1f}%, classified as unfavorable variance. The largest gap was in operating "
-            f"income, suggesting margin compression and cost overruns relative to plan were the primary "
-            f"drivers of the budget shortfall."
+            f"by {ni_var:+.1f}%, classified as unfavorable variance. Operating income variance was "
+            f"{oi_var:+.1f}% — the largest relative gap — suggesting margin compression and cost "
+            f"overruns relative to plan were the primary drivers of the budget shortfall."
         )
 
     def _forecast_section(self) -> str:
@@ -210,10 +228,11 @@ class ExecutiveSummaryGenerator:
             f"using exponential smoothing on historical trends."
         )
         if bull_rev and bear_rev:
+            spread_pct = (bull_rev - bear_rev) / base_rev * 100
             text += (
-                f" Scenario analysis ranges from {_fmt_b(bear_rev)} (bear) to {_fmt_b(bull_rev)} (bull), "
-                f"providing a {_pct((bull_rev - bear_rev) / base_rev * 100)} planning bandwidth for "
-                f"strategic and budgeting decisions."
+                f" Scenario analysis ranges from {_fmt_b(bear_rev)} (bear) to {_fmt_b(bull_rev)} (bull) "
+                f"in {last_year}, a {_pct(spread_pct, signed=False)} spread relative to the base forecast "
+                f"for strategic planning."
             )
         return text
 
@@ -225,10 +244,10 @@ class ExecutiveSummaryGenerator:
         second = self.tornado.iloc[1] if len(self.tornado) > 1 else None
         text = (
             f"Sensitivity analysis (±10% driver changes) identifies {top['Driver']} as the highest-impact "
-            f"variable on net income, with an impact range of {_fmt_b(top['Range'])}."
+            f"variable on net income, with a net income swing of {_fmt_b(top['Range'])}."
         )
         if second is not None:
-            text += f" {second['Driver']} ranks second at {_fmt_b(second['Range'])}."
+            text += f" {second['Driver']} ranks second with a {_fmt_b(second['Range'])} net income swing."
         text += (
             " FP&A teams should prioritize these drivers in scenario planning and management reporting."
         )
@@ -236,13 +255,28 @@ class ExecutiveSummaryGenerator:
 
     def _conclusion(self) -> str:
         y = self.latest
+        p = self.prior
         yoy = self.growth.loc[y, "Total Revenue YoY %"] if "Total Revenue YoY %" in self.growth.columns else 0
         tone = "growth deceleration and margin pressure" if yoy and yoy < 0 else "continued growth momentum"
+
+        wc_priority = "monitoring working capital efficiency and CCC trends"
+        if (
+            p is not None
+            and p in self.wc.index
+            and y in self.wc.index
+            and not pd.isna(self.wc.loc[y, "Cash Conversion Cycle"])
+            and not pd.isna(self.wc.loc[p, "Cash Conversion Cycle"])
+        ):
+            ccc_chg = float(self.wc.loc[y, "Cash Conversion Cycle"]) - float(self.wc.loc[p, "Cash Conversion Cycle"])
+            if ccc_chg > 1:
+                wc_priority = "optimizing working capital as CCC extends"
+            elif ccc_chg < -1:
+                wc_priority = "sustaining recent working capital improvements"
 
         return (
             f"{self.company_name} faces {tone} in the current cycle, yet maintains positive free cash flow "
             f"and a strong balance sheet. Key FP&A priorities include: (1) monitoring gross margin trends "
-            f"and cost discipline, (2) optimizing working capital as CCC extends, (3) recalibrating budgets "
+            f"and cost discipline, (2) {wc_priority}, (3) recalibrating budgets "
             f"to reflect actual performance gaps, and (4) stress-testing forecasts against revenue and COGS "
             f"sensitivities. This analysis framework is replicable across any public company using "
             f"standardized Yahoo Finance data."

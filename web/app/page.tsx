@@ -1,11 +1,13 @@
 import {
   CCCChart,
   DuPontChart,
+  ExpenseBreakdownChart,
   FCFChart,
   ForecastChart,
   GrowthChart,
   MarginBridgeChart,
   MarginChart,
+  OneWaySensitivityChart,
   RevenueProfitChart,
   ScenarioChart,
   BudgetVsActualChart,
@@ -61,6 +63,7 @@ export default function Home() {
               <RevenueProfitChart data={pl.incomeStatement} />
               <MarginChart data={pl.margins} />
               <GrowthChart data={pl.growth} />
+              <ExpenseBreakdownChart data={pl.expenseBreakdown} />
               <MarginBridgeChart data={corpFin.marginBridge} />
             </div>
           </Section>
@@ -219,7 +222,8 @@ export default function Home() {
             subtitle="Identify which financial drivers have the greatest impact on net income under ±10% changes."
           >
             <TornadoChart data={sensitivity.tornado} />
-            <div className="mt-6">
+            <div className="mt-6 grid gap-6 lg:grid-cols-2">
+              <OneWaySensitivityChart data={sensitivity.oneWay} />
               <Card>
                 <h3 className="mb-4 text-lg font-semibold text-white">Driver Impact Ranking</h3>
                 <div className="space-y-4">

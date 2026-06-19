@@ -1,6 +1,7 @@
 """
 Export full financial analysis workbook to Excel for learning.
-Includes raw data + every analysis step with a guide sheet.
+Raw data (02–05) contains values; analysis sheets (06–20) use Excel formulas
+that reference raw tabs and the assumptions sheet.
 """
 
 from __future__ import annotations
@@ -10,10 +11,16 @@ from datetime import datetime
 from pathlib import Path
 
 import pandas as pd
+from openpyxl import load_workbook
 
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT))
 
+from scripts.excel_formula_builder import (
+    add_formula_analysis_sheets,
+    build_refs,
+    write_assumptions_sheet,
+)
 from src.budgeting import BudgetAnalyzer
 from src.capital_structure import CapitalStructureAnalyzer
 from src.cash_flow_analysis import CashFlowAnalyzer
@@ -31,16 +38,45 @@ DESKTOP_PATHS = [
     Path(r"f:\桌面"),
 ]
 
+SHEET_ORDER = [
+    "00_Guide",
+    "00_Pipeline",
+    "01_Company_Info",
+    "02_Income_Raw",
+    "03_Balance_Raw",
+    "04_CashFlow_Raw",
+    "05_Price_1Y",
+    "15a_Assumptions",
+    "06_PL_Key_Lines",
+    "07_Margins",
+    "08_YoY_Growth",
+    "09_Expense_Pct",
+    "10_Margin_Bridge",
+    "11_CashFlow_FCF",
+    "12_Working_Capital",
+    "13_DuPont",
+    "14_Capital_Structure",
+    "15_Budget",
+    "16_Variance",
+    "16b_Budget_Summary",
+    "17_Forecast",
+    "18_Scenarios",
+    "19_Sensitivity_1Way",
+    "19b_Sensitivity_2Way",
+    "20_Tornado",
+    "21_Executive_Summary",
+]
 
 GUIDE_ROWS = [
     ["Tesla Financial Analysis — Excel Learning Workbook", ""],
     ["", ""],
     ["如何使用本文件", ""],
-    ["1. 从 02–05 页查看 Yahoo Finance 原始三表 + 股价", ""],
-    ["   格式：行 = 科目，列 = 年份（标准财报竖排展示）", ""],
-    ["2. 从 06 页开始按 FP&A 分析流程逐步阅读", ""],
-    ["3. 每个分析表对应项目 src/ 下的 Python 模块", ""],
-    ["4. 21_Executive_Summary 为自动生成的文字结论", ""],
+    ["1. 02–05 页为 Yahoo Finance 原始数据（数值，勿改结构）", ""],
+    ["   格式：行 = 科目，列 = 年份", ""],
+    ["2. 15a_Assumptions 可修改增长率等假设，分析表会自动重算", ""],
+    ["3. 06–20 页均为 Excel 公式，引用 02–04 原始表 + 假设页", ""],
+    ["   点击单元格查看公式，便于学习 FP&A 建模", ""],
+    ["4. 21_Executive_Summary 为 Python 自动生成的文字结论", ""],
     ["", ""],
     ["分析流程 (Pipeline)", "对应模块"],
     ["Step 1: 数据获取", "src/data_fetcher.py → 02–05"],
@@ -50,7 +86,7 @@ GUIDE_ROWS = [
     ["Step 5: 营运资本 & CCC", "src/working_capital.py → 12"],
     ["Step 6: DuPont 回报率", "src/dupont_analysis.py → 13"],
     ["Step 7: 资本结构", "src/capital_structure.py → 14"],
-    ["Step 8: 预算编制", "src/budgeting.py → 15"],
+    ["Step 8: 预算编制", "src/budgeting.py → 15, 15a"],
     ["Step 9: 预算差异", "src/budgeting.py → 16"],
     ["Step 10: 收入预测", "src/forecasting.py → 17–18"],
     ["Step 11: 敏感性分析", "src/sensitivity.py → 19–20"],
@@ -65,7 +101,6 @@ GUIDE_ROWS = [
     ["预算差异 %", "= (实际 - 预算) / 预算"],
 ]
 
-
 PIPELINE_ROWS = [
     ["Step", "Module", "Input Data", "Output Metrics", "FP&A Purpose"],
     [1, "data_fetcher", "Yahoo Finance API", "Income / BS / CF / Prices", "获取标准化财报数据"],
@@ -75,9 +110,9 @@ PIPELINE_ROWS = [
     [5, "working_capital", "BS + Income", "DSO, DIO, DPO, CCC", "营运资本效率"],
     [6, "dupont_analysis", "BS + Income", "ROE, ROA, ROIC decomposition", "股东回报驱动因素"],
     [7, "capital_structure", "BS + Income", "Net Debt, Leverage, Coverage", "资本结构与偿债能力"],
-    [8, "budgeting", "Historical Income", "Forward budget", "年度预算编制"],
+    [8, "budgeting", "Historical Income + Assumptions", "Forward budget", "年度预算编制"],
     [9, "budgeting (variance)", "Budget vs Actual", "Variance %, Favorable/Unfavorable", "预算执行监控"],
-    [10, "forecasting", "Historical Revenue", "Base forecast + Scenarios", "滚动预测与情景规划"],
+    [10, "forecasting", "Historical Revenue + Assumptions", "Base forecast + Scenarios", "滚动预测与情景规划"],
     [11, "sensitivity", "Latest year actuals", "Tornado, One-way tables", "风险与驱动因素测试"],
     [12, "executive_summary", "All above", "Narrative report", "管理层汇报材料"],
 ]
@@ -102,7 +137,6 @@ def _is_year_index(df: pd.DataFrame) -> bool:
 
 
 def _vertical_format(df: pd.DataFrame, index_label: str = "Line Item") -> pd.DataFrame:
-    """Standard financial statement layout: line items as rows, years as columns."""
     out = df.T.copy()
     out.index.name = index_label
     try:
@@ -119,24 +153,39 @@ def _order_line_items(df: pd.DataFrame, priority: list[str]) -> pd.DataFrame:
     return df.reindex(ordered)
 
 
-def _write_df(
+def _write_raw_df(
     writer: pd.ExcelWriter,
     sheet: str,
     df: pd.DataFrame,
-    index: bool = True,
-    vertical: bool = True,
     index_label: str = "Line Item",
     line_order: list[str] | None = None,
 ) -> None:
     name = sheet[:31]
     out = df.copy()
-    if vertical and index and _is_year_index(out):
+    if _is_year_index(out):
         out = _vertical_format(out, index_label=index_label)
         if line_order:
             out = _order_line_items(out, line_order)
         out.to_excel(writer, sheet_name=name, index=True)
     else:
-        out.to_excel(writer, sheet_name=name, index=index)
+        out.to_excel(writer, sheet_name=name, index=True)
+
+
+def _reorder_sheets(wb, order: list[str]) -> None:
+    for i, name in enumerate(order):
+        if name in wb.sheetnames:
+            wb.move_sheet(name, offset=i - wb.sheetnames.index(name))
+
+
+def _write_executive_summary(wb, sections: list[dict]) -> None:
+    ws = wb.create_sheet("21_Executive_Summary")
+    ws.cell(1, 1, "Section")
+    ws.cell(1, 2, "Narrative")
+    for i, section in enumerate(sections, start=2):
+        ws.cell(i, 1, section["title"])
+        ws.cell(i, 2, section["body"])
+    ws.column_dimensions["A"].width = 28
+    ws.column_dimensions["B"].width = 100
 
 
 def export_workbook(ticker: str = "TSLA", output_path: Path | None = None) -> Path:
@@ -150,28 +199,22 @@ def export_workbook(ticker: str = "TSLA", output_path: Path | None = None) -> Pa
     pl = PLAnalyzer(income_stmt)
     margins = pl.margin_analysis()
     growth = pl.yoy_growth()
-    expense = pl.expense_breakdown()
-    pl_summary = pl.summary_table()
 
     budget_analyzer = BudgetAnalyzer(income_stmt)
-    base_year = income_stmt.index[-2]
-    latest_year = income_stmt.index[-1]
+    base_year = int(income_stmt.index[-2])
+    latest_year = int(income_stmt.index[-1])
     budget = budget_analyzer.create_budget(
         base_year=base_year,
         growth_assumptions={"Total Revenue": 0.12, "Operating Expense": 0.08},
         years_forward=2,
     )
-    budget_summary = budget_analyzer.budget_summary(base_year=base_year, years_forward=2)
     variance = budget_analyzer.variance_analysis(budget, latest_year) if latest_year in budget.index else None
 
     forecaster = FinancialForecaster(income_stmt)
     revenue_fc = forecaster.forecast_metric("Total Revenue", periods=3)
-    multi_fc = forecaster.multi_metric_forecast(periods=3)
     scenarios = forecaster.scenario_forecast("Total Revenue", periods=3)
 
     sensitivity = SensitivityAnalyzer(income_stmt)
-    one_way = sensitivity.one_way_sensitivity()
-    two_way = sensitivity.two_way_sensitivity()
     tornado = sensitivity.tornado_data()
 
     cf_analyzer = CashFlowAnalyzer(income_stmt, cash_flow, balance_sheet)
@@ -218,8 +261,6 @@ def export_workbook(ticker: str = "TSLA", output_path: Path | None = None) -> Pa
     price_export[date_col] = pd.to_datetime(price_export[date_col]).dt.tz_localize(None)
     price_export.rename(columns={date_col: "Date"}, inplace=True)
 
-    summary_df = pd.DataFrame(exec_summary["sections"])
-
     with pd.ExcelWriter(output_path, engine="openpyxl") as writer:
         pd.DataFrame(GUIDE_ROWS, columns=["Topic", "Detail"]).to_excel(
             writer, sheet_name="00_Guide", index=False
@@ -228,55 +269,46 @@ def export_workbook(ticker: str = "TSLA", output_path: Path | None = None) -> Pa
             writer, sheet_name="00_Pipeline", index=False
         )
         company_df.to_excel(writer, sheet_name="01_Company_Info", index=True)
-
-        _write_df(writer, "02_Income_Raw", income_stmt, line_order=INCOME_LINE_ORDER)
-        _write_df(writer, "03_Balance_Raw", balance_sheet)
-        _write_df(writer, "04_CashFlow_Raw", cash_flow)
+        _write_raw_df(writer, "02_Income_Raw", income_stmt, line_order=INCOME_LINE_ORDER)
+        _write_raw_df(writer, "03_Balance_Raw", balance_sheet)
+        _write_raw_df(writer, "04_CashFlow_Raw", cash_flow)
         price_export.to_excel(writer, sheet_name="05_Price_1Y", index=False)
 
-        key_pl = income_stmt[
-            [c for c in ["Total Revenue", "Cost Of Revenue", "Gross Profit",
-                         "Operating Expense", "Operating Income", "EBITDA", "Net Income"]
-             if c in income_stmt.columns]
-        ]
-        _write_df(writer, "06_PL_Key_Lines", key_pl, index_label="Metric")
-        _write_df(writer, "07_Margins", margins, index_label="Metric")
-        _write_df(writer, "08_YoY_Growth", growth, index_label="Metric")
-        _write_df(writer, "09_Expense_Pct", expense, index_label="Metric")
-        _write_df(writer, "10_Margin_Bridge", bridge, index=False)
-
-        _write_df(writer, "11_CashFlow_FCF", fcf_summary, index_label="Metric")
-        _write_df(writer, "12_Working_Capital", wc_summary, index_label="Metric")
-        _write_df(writer, "13_DuPont", dupont, index_label="Metric")
-        _write_df(writer, "14_Capital_Structure", cap_struct, index_label="Metric")
-
-        _write_df(writer, "15_Budget", budget, index_label="Metric")
-        if variance is not None:
-            variance.to_excel(writer, sheet_name="16_Variance", index=True)
-        _write_df(writer, "16b_Budget_Summary", budget_summary, index_label="Metric")
-
-        _write_df(writer, "17_Forecast", revenue_fc, index_label="Metric")
-        _write_df(writer, "17b_Multi_Forecast", multi_fc, index_label="Metric")
-        scenarios.to_excel(writer, sheet_name="18_Scenarios", index=False)
-
-        one_way.to_excel(writer, sheet_name="19_Sensitivity_1Way", index=False)
-        two_way.to_excel(writer, sheet_name="19b_Sensitivity_2Way")
-        tornado.to_excel(writer, sheet_name="20_Tornado", index=False)
-
-        summary_df.to_excel(writer, sheet_name="21_Executive_Summary", index=False)
-        _write_df(writer, "22_PL_Full_Summary", pl_summary, index_label="Metric")
+    wb = load_workbook(output_path)
+    refs = build_refs(wb)
+    write_assumptions_sheet(wb, base_year, latest_year)
+    add_formula_analysis_sheets(wb, refs, base_year, latest_year)
+    _write_executive_summary(wb, exec_summary["sections"])
+    _reorder_sheets(wb, SHEET_ORDER)
+    wb.save(output_path)
 
     print("Workbook saved:", output_path.name)
-    # Also copy to alternate desktop if available
+    import shutil
+
+    targets = [ROOT / output_path.name]
     for desktop in DESKTOP_PATHS:
         alt = desktop / output_path.name
         if desktop.exists() and alt.resolve() != output_path.resolve():
-            import shutil
-            shutil.copy(output_path, alt)
-            print("Also copied to alternate desktop folder")
+            targets.append(alt)
+
+    for target in targets:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.resolve() != output_path.resolve():
+            shutil.copy(output_path, target)
+            print("Also copied to:", str(target))
     return output_path
 
 
 if __name__ == "__main__":
-    path = export_workbook()
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--output",
+        type=Path,
+        default=None,
+        help="Output .xlsx path (default: desktop with today's date)",
+    )
+    args = parser.parse_args()
+    path = export_workbook(output_path=args.output)
     print(str(path))
