@@ -1,6 +1,7 @@
 import {
   CCCChart,
   DuPontChart,
+  DriverImpactChart,
   ExpenseBreakdownChart,
   FCFChart,
   ForecastChart,
@@ -12,6 +13,7 @@ import {
   ScenarioChart,
   BudgetVsActualChart,
   TornadoChart,
+  TwoWaySensitivityHeatmap,
 } from "@/components/charts";
 import { Footer, Header, Hero, ProfileBanner } from "@/components/layout";
 import { Badge, Card, KPICard, Section } from "@/components/ui";
@@ -64,7 +66,7 @@ export default function Home() {
               <MarginChart data={pl.margins} />
               <GrowthChart data={pl.growth} />
               <ExpenseBreakdownChart data={pl.expenseBreakdown} />
-              <MarginBridgeChart data={corpFin.marginBridge} />
+              <MarginBridgeChart data={corpFin.marginBridge} closingNetIncome={highlights.netIncome} />
             </div>
           </Section>
 
@@ -151,7 +153,7 @@ export default function Home() {
           <Section
             id="budget"
             title="Budgeting & Variance"
-            subtitle="Forward-looking budget built from historical CAGR assumptions, compared against actual performance."
+            subtitle="Grouped actual vs budget by fiscal year, with variance table for the latest closed period."
           >
             <div className="grid gap-6 lg:grid-cols-2">
               <BudgetVsActualChart data={budget.summary} />
@@ -219,35 +221,15 @@ export default function Home() {
           <Section
             id="sensitivity"
             title="Sensitivity Analysis"
-            subtitle="Identify which financial drivers have the greatest impact on net income under ±10% changes."
+            subtitle="Tornado (±10% driver shocks), one-way revenue stress test, and two-way revenue × OpEx matrix — standard FP&A sensitivity toolkit."
           >
             <TornadoChart data={sensitivity.tornado} />
             <div className="mt-6 grid gap-6 lg:grid-cols-2">
               <OneWaySensitivityChart data={sensitivity.oneWay} />
-              <Card>
-                <h3 className="mb-4 text-lg font-semibold text-white">Driver Impact Ranking</h3>
-                <div className="space-y-4">
-                  {sensitivity.tornado.map((row, i) => (
-                    <div key={row.Driver} className="flex items-center gap-4">
-                      <span className="w-6 text-sm font-bold text-brand-muted">#{i + 1}</span>
-                      <div className="flex-1">
-                        <div className="mb-1 flex justify-between text-sm">
-                          <span className="text-white">{row.Driver}</span>
-                          <span className="text-brand-muted">Range: {formatBillions(row.Range)}</span>
-                        </div>
-                        <div className="h-2 overflow-hidden rounded-full bg-brand-border">
-                          <div
-                            className="h-full rounded-full bg-gradient-to-r from-brand-red to-red-400"
-                            style={{
-                              width: `${(row.Range / sensitivity.tornado[0].Range) * 100}%`,
-                            }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
+              <DriverImpactChart data={sensitivity.tornado} />
+            </div>
+            <div className="mt-6">
+              <TwoWaySensitivityHeatmap data={sensitivity.twoWay} />
             </div>
           </Section>
 
