@@ -5,7 +5,7 @@
     "sector": "Consumer Cyclical",
     "industry": "Auto Manufacturers",
     "employees": 134785,
-    "marketCap": 1458197364736,
+    "marketCap": 1504129843200,
     "currency": "USD"
   },
   "highlights": {
@@ -246,21 +246,21 @@
         "fiscalYear": 2025,
         "Type": "Budget",
         "label": "2025 Budget",
-        "Total Revenue": 102760111000.0,
+        "Total Revenue": 109412800000.0,
         "Cost Of Revenue": 87180760000.0,
-        "Gross Profit": 15579351000.0,
-        "Operating Income": 3915498000.0,
-        "Net Income": 2936623500.0
+        "Gross Profit": 22232040000.0,
+        "Operating Income": 11766840000.0,
+        "Net Income": 8825130000.0
       },
       {
         "fiscalYear": 2026,
         "Type": "Budget",
         "label": "2026 Budget",
-        "Total Revenue": 108093360760.9,
+        "Total Revenue": 122542336000.0,
         "Cost Of Revenue": 94721895740.0,
-        "Gross Profit": 13371465020.9,
-        "Operating Income": -668314835.2,
-        "Net Income": -501236126.4
+        "Gross Profit": 27820440260.0,
+        "Operating Income": 16518024260.0,
+        "Net Income": 12388518195.0
       }
     ],
     "variance": [
@@ -2150,13 +2150,13 @@
     {
       "date": "2026-06-17",
       "close": 396.38,
-      "volume": 43376000
+      "volume": 43534300
     },
     {
       "date": "2026-06-18",
-      "close": 388.23,
-      "volume": 18494312
+      "close": 400.49,
+      "volume": 58255300
     }
   ],
-  "generatedAt": "2026-06-18T10:55:54.746848"
+  "generatedAt": "2026-06-19T01:01:13.761642"
 }

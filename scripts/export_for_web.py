@@ -99,7 +99,9 @@ def export(ticker: str = "TSLA") -> Path:
         growth_assumptions={"Total Revenue": 0.12, "Operating Expense": 0.08},
         years_forward=2,
     )
-    budget_summary = budget_analyzer.budget_summary(base_year=base_year, years_forward=2)
+    budget_summary = budget_analyzer.budget_summary(
+        base_year=base_year, years_forward=2, budget=budget
+    )
     variance = None
     if latest_year in budget.index:
         variance = budget_analyzer.variance_analysis(budget, latest_year)

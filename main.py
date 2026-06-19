@@ -81,7 +81,9 @@ def run_analysis(ticker: str = "TSLA", output_dir: str = "outputs") -> None:
         growth_assumptions={"Total Revenue": 0.12, "Operating Expense": 0.08},
         years_forward=2,
     )
-    budget_summary = budget_analyzer.budget_summary(base_year=base_year, years_forward=2)
+    budget_summary = budget_analyzer.budget_summary(
+        base_year=base_year, years_forward=2, budget=budget
+    )
     budget.to_csv(reports_dir / f"{ticker}_budget.csv")
 
     if latest_year in budget.index:

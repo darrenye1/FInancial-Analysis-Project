@@ -98,9 +98,20 @@ class BudgetAnalyzer:
             })
         return pd.DataFrame(rows).set_index("Metric")
 
-    def budget_summary(self, base_year: int, years_forward: int = 2) -> pd.DataFrame:
+    def budget_summary(
+        self,
+        base_year: int,
+        years_forward: int = 2,
+        growth_assumptions: dict[str, float] | None = None,
+        budget: pd.DataFrame | None = None,
+    ) -> pd.DataFrame:
         """Combine historical actuals with forward budget."""
-        budget = self.create_budget(base_year, years_forward=years_forward)
+        if budget is None:
+            budget = self.create_budget(
+                base_year,
+                growth_assumptions=growth_assumptions,
+                years_forward=years_forward,
+            )
         hist = self.income_stmt[
             [c for c in ["Total Revenue", "Cost Of Revenue", "Gross Profit",
                          "Operating Income", "Net Income"]
